@@ -1,14 +1,10 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %} | 小说网站</title>
-    <meta name="description" content="在小说网站免费阅读小说，畅享奇幻、言情等精彩内容！">
+    <title>{% block title %}{% endblock %} |    TaleTap</title>
+    <meta name="description" content="在TaleTap免费阅读小说，畅享奇幻、言情等精彩内容！">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2786216806192691"
@@ -48,7 +44,7 @@
         {% block content %}{% endblock %}
     </main>
     <footer class="bg-gray-800 text-white p-4 text-center mt-8">
-        <p>&copy; 2025 小说网站。</p>
+        <p>&copy; 2025 TaleTap. <a href="/privacy-policy">Privacy Policy</a></p>
     </footer>
     <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 </body>

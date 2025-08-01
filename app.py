@@ -127,6 +127,11 @@ def add_comment(chapter_id):
         db.session.commit()
     return redirect(url_for('chapter', novel_id=Chapter.query.get(chapter_id).novel_id, chapter_id=chapter_id))
 
+@app.route('/category/<string:category>')
+def category(category):
+    novels = Novel.query.filter_by(category=category).all()
+    return render_template('index.html', novels=novels, category=category)
+
 @app.route('/add_to_shelf/<int:novel_id>', methods=['POST'])
 @login_required
 def add_to_shelf(novel_id):

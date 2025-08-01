@@ -1,10 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}注册{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-md">
+    <h2 class="text-2xl font-bold mb-4 text-center">注册</h2>
+    <form method="POST" class="space-y-4">
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.username.label(class="block text-sm font-medium text-gray-700") }}
+            {{ form.username(class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white") }}
+            {% if form.username.errors %}
+                <p class="text-red-500 text-sm mt-1">
+                    {% for error in form.username.errors %}
+                        {{ error }}<br>
+                    {% endfor %}
+                </p>
+            {% endif %}
+        </div>
+        <div>
+            {{ form.password.label(class="block text-sm font-medium text-gray-700") }}
+            {{ form.password(class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white") }}
+            {% if form.password.errors %}
+                <p class="text-red-500 text-sm mt-1">
+                    {% for error in form.password.errors %}
+                        {{ error }}<br>
+                    {% endfor %}
+                </p>
+            {% endif %}
+        </div>
+        <div>
+            {{ form.submit(class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700") }}
+        </div>
+    </form>
+    <p class="mt-4 text-center">
+        已有账号？<a href="{{ url_for('login') }}" class="text-blue-600 hover:underline">立即登录</a>
+    </p>
+</div>
+{% endblock %}
