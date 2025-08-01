@@ -17,10 +17,11 @@
 <body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
     <nav class="bg-blue-600 text-white p-4 flex justify-between items-center">
         <div class="flex items-center space-x-4">
-            <a href="{{ url_for('index') }}" class="text-lg font-bold bg-blue-700 px-3 py-1 rounded hover:bg-blue-800">主页</a>
+
             <a href="{{ url_for('index') }}" class="text-lg font-bold">小说网站</a>
         </div>
         <div class="flex items-center space-x-4">
+            <a href="{{ url_for('index') }}" class="mx-2">首页</a>
             <a href="/category/fantasy" class="mx-2">奇幻</a>
             <a href="/category/romance" class="mx-2">言情</a>
             {% if current_user.is_authenticated %}
