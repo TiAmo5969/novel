@@ -3,7 +3,7 @@
 {% block content %}
 <div class="max-w-md mx-auto bg-white dark:bg-gray-800 p-6 rounded shadow">
     <h1 class="text-2xl font-bold mb-4">{{ title }}</h1>
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         <div class="mb-4">
             {{ form.title.label }} {{ form.title(class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white") }}
@@ -12,7 +12,8 @@
             {{ form.description.label }} {{ form.description(class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white") }}
         </div>
         <div class="mb-4">
-            {{ form.cover_image.label }} {{ form.cover_image(class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white", placeholder="例如: cover.jpg") }}
+            <label class="block text-gray-700 dark:text-gray-300">上传封面</label>
+            <input type="file" name="cover" accept="image/png,image/jpeg,image/gif" class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white">
         </div>
         <div class="mb-4">
             {{ form.category.label }} {{ form.category(class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white", placeholder="例如: 奇幻") }}
@@ -21,5 +22,11 @@
             {{ form.submit(class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700") }}
         </div>
     </form>
+    {% if novel and novel.cover_image %}
+    <div class="mt-4">
+        <p>当前封面：</p>
+        <img src="{{ url_for('static', filename='img/' + novel.cover_image) }}" alt="{{ novel.title }} 封面" class="w-32 h-48 object-cover">
+    </div>
+    {% endif %}
 </div>
 {% endblock %}

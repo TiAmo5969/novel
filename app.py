@@ -10,10 +10,18 @@ from functools import wraps
 from models import db, User, Novel, Chapter, Comment, UserNovel
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.urandom(24).hex()
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.path.dirname(__file__), 'site.db')
+# app.config['SECRET_KEY'] = os.urandom(24).hex()
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', os.urandom(24).hex())
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(os.path.dirname(__file__), 'site.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///' + os.path.join(os.path.dirname(__file__), 'site.db'))
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['UPLOAD_FOLDER'] = os.path.join('static', 'img')  # 图片保存目录
+app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}  # 允许的文件扩展名
 db.init_app(app)
+
+# 检查文件扩展名
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
@@ -233,7 +241,18 @@ def delete_chapter(novel_id, chapter_id):
     flash('章节删除成功！')
     return redirect(url_for('admin_dashboard'))
 
+
+# 数据库初始化
+with app.app_context():
+    db.create_all()
+    if not User.query.filter_by(username='admin').first():
+        admin = User(username='admin', password=generate_password_hash('admin123'))
+        novel1 = Novel(title='黑暗森林', description='科幻小说', cover_image='cover_fantasy.jpg', category='科幻')
+        novel2 = Novel(title='倾城之恋', description='言情小说', cover_image='cover_romance.jpg', category='言情')
+        db.session.add_all([admin, novel1, novel2])
+        db.session.commit()
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #     db.create_all()
     app.run(debug=True)
