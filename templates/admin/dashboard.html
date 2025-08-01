@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}后台管理{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto bg-white dark:bg-gray-800 p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">后台管理 - 小说列表</h1>
+    <a href="{{ url_for('add_novel') }}" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 mb-4 inline-block">添加小说</a>
+    <table class="w-full border-collapse">
+        <thead>
+            <tr class="bg-gray-200 dark:bg-gray-700">
+                <th class="border p-2">标题</th>
+                <th class="border p-2">分类</th>
+                <th class="border p-2">章节数</th>
+                <th class="border p-2">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for novel in novels %}
+            <tr>
+                <td class="border p-2">{{ novel.title }}</td>
+                <td class="border p-2">{{ novel.category or '无' }}</td>
+                <td class="border p-2">{{ novel.chapters | length }}</td>
+                <td class="border p-2">
+                    <a href="{{ url_for('edit_novel', novel_id=novel.id) }}" class="text-blue-600 hover:underline">编辑</a>
+                    <form method="POST" action="{{ url_for('delete_novel', novel_id=novel.id) }}" class="inline">
+                        <button type="submit" class="text-red-600 hover:underline" onclick="return confirm('确定删除小说 {{ novel.title }}？')">删除</button>
+                    </form>
+                    <a href="{{ url_for('add_chapter', novel_id=novel.id) }}" class="text-blue-600 hover:underline">添加章节</a>
+                    {% for chapter in novel.chapters %}
+                    <div class="mt-2">
+                        <span>{{ chapter.title }}</span>
+                        <a href="{{ url_for('edit_chapter', novel_id=novel.id, chapter_id=chapter.id) }}" class="text-blue-600 hover:underline">编辑</a>
+                        <form method="POST" action="{{ url_for('delete_chapter', novel_id=novel.id, chapter_id=chapter.id) }}" class="inline">
+                            <button type="submit" class="text-red-600 hover:underline" onclick="return confirm('确定删除章节 {{ chapter.title }}？')">删除</button>
+                        </form>
+                    </div>
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

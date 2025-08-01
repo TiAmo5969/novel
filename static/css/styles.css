@@ -1,0 +1,28 @@
+/* D:\py\flaskProject\static\css\styles.css */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.novel-card {
+    transition: transform 0.2s;
+}
+.novel-card:hover {
+    transform: scale(1.05);
+}
+.dark .novel-card {
+    background-color: #1f2937; /* Tailwind bg-gray-800 */
+}
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+.dark tr:nth-child(even) {
+    background-color: #2d3748; /* Tailwind bg-gray-700 */
+}

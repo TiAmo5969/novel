@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}首页{% endblock %}
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    {% if novels %}
+        {% for novel in novels %}
+        <div class="bg-white dark:bg-gray-800 p-4 rounded shadow novel-card">
+            <img src="{{ url_for('static', filename='img/' + (novel.cover_image or 'cover.jpg')) }}" alt="{{ novel.title }} 封面" class="w-full h-48 object-cover">
+            <h2 class="text-xl font-bold mt-2">{{ novel.title }}</h2>
+            <p class="text-gray-600 dark:text-gray-400">{{ novel.description[:100] }}...</p>
+            <a href="{{ url_for('novel', novel_id=novel.id) }}" class="text-blue-600 hover:underline">立即阅读</a>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-gray-500">暂无小说</p>
+    {% endif %}
+</div>
+{% endblock %}

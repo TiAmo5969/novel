@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}{{ novel.title }}{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-6 rounded shadow">
+    <h1 class="text-2xl font-bold">{{ novel.title }}</h1>
+    <img src="{{ url_for('static', filename='img/' + (novel.cover_image or 'cover.jpg')) }}" alt="{{ novel.title }} 封面" class="w-full h-64 object-cover mt-4">
+    <p class="mt-4 text-gray-700 dark:text-gray-300">{{ novel.description }}</p>
+    <p class="mt-2 text-gray-500 dark:text-gray-400">分类: {{ novel.category or '无' }}</p>
+    <h2 class="text-xl font-bold mt-6">章节列表</h2>
+    <ul class="mt-4">
+        {% if novel.chapters %}
+            {% for chapter in novel.chapters %}
+            <li><a href="{{ url_for('chapter', novel_id=novel.id, chapter_id=chapter.id) }}" class="text-blue-600 hover:underline">{{ chapter.title }}</a></li>
+            {% endfor %}
+        {% else %}
+            <li class="text-gray-500">暂无章节</li>
+        {% endif %}
+    </ul>
+    {% if current_user.is_authenticated %}
+    <form method="POST" action="{{ url_for('add_to_shelf', novel_id=novel.id) }}" class="mt-4">
+        <button type="submit" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700">加入书架</button>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

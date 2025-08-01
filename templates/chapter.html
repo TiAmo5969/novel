@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}{{ chapter.title }} - {{ chapter.novel.title }}{% endblock %}
+{% block content %}
+<div class="bg-white dark:bg-gray-800 p-6 rounded shadow max-w-3xl mx-auto">
+    <meta name="description" content="Read {{ chapter.title }} of {{ chapter.novel.title }} for free. Enjoy epic fantasy adventures on NovelSite!">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "CreativeWork",
+        "name": "{{ chapter.title }}",
+        "author": {
+            "@type": "Person",
+            "name": "Your Author Name"
+        },
+        "isPartOf": {
+            "@type": "Book",
+            "name": "{{ chapter.novel.title }}"
+        },
+        "description": "{{ chapter.content[:200] | striptags }}"
+    }
+    </script>
+    <h1 class="text-2xl font-bold">{{ chapter.title }}</h1>
+    <p class="mt-4 text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{{ chapter.content }}</p>
+    <div class="flex justify-between mt-4">
+        {% if chapter.id > 1 %}
+        <a href="{{ url_for('chapter', novel_id=chapter.novel.id, chapter_id=chapter.id-1) }}" class="text-blue-600 hover:underline">Previous</a>
+        {% endif %}
+        <a href="{{ url_for('chapter', novel_id=chapter.novel.id, chapter_id=chapter.id+1) }}" class="text-blue-600 hover:underline">Next</a>
+    </div>
+    <!-- AdSense -->
+    <div class="ad-container mt-6">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-你的广告ID"
+             data-ad-slot="你的广告位ID"
+             data-ad-format="auto"></ins>
+        <script>
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+    </div>
+    <!-- Comments -->
+    <div class="mt-8">
+        <h2 class="text-xl font-bold">Comments</h2>
+        {% if current_user.is_authenticated %}
+        <form method="POST" action="{{ url_for('add_comment', chapter_id=chapter.id) }}">
+            {{ form.hidden_tag() }}
+            <div class="mt-4">
+                {{ form.content(class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white") }}
+            </div>
+            <div class="mt-2">
+                {{ form.submit(class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700") }}
+            </div>
+        </form>
+        {% else %}
+        <p><a href="{{ url_for('login') }}" class="text-blue-600 hover:underline">Login</a> to comment.</p>
+        {% endif %}
+        {% for comment in chapter.comments %}
+        <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded mt-4">
+            <p class="text-sm text-gray-500">{{ comment.timestamp.strftime('%Y-%m-%d') }}</p>
+            <p class="font-bold">{{ comment.user.username }}</p>
+            <p>{{ comment.content }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
