@@ -158,6 +158,10 @@ def add_to_shelf(novel_id):
         db.session.commit()
     return redirect(url_for('novel', novel_id=novel_id))
 
+@app.route('/privacy-policy')
+def privacy_policy():
+    return render_template('privacy_policy.html')
+
 @app.route('/sitemap.xml')
 def sitemap():
     xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
