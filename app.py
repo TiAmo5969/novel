@@ -74,6 +74,10 @@ def index():
     novels = Novel.query.all()
     return render_template('index.html', novels=novels)
 
+@app.route('/keep-alive')
+def keep_alive():
+    return 'Server is running', 200
+
 @app.route('/novel/<int:novel_id>')
 def novel(novel_id):
     novel = Novel.query.get_or_404(novel_id)
