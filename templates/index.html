@@ -14,13 +14,13 @@
             <div class="border p-4 rounded shadow">
                 {% if novel.cover_image %}
 <!--                xiaoshuofengmian 32rem-->
-                <img src="{{ url_for('static', filename='img/' + novel.cover_image) }}" alt="{{ novel.title }}" class="w-full h-48 object-cover mb-2">
+                <img src="{{ url_for('static', filename='img/' + novel.cover_image) }}" alt="{{ novel.title }}" class="w-full h-[32rem] object-cover mb-2">
                 {% else %}
                 <div class="w-full h-48 bg-gray-200 flex items-center justify-center mb-2">
                     <span>No Cover</span>
                 </div>
                 {% endif %}
-                <h3 class="text-xl font-semibold">{{ novel.title }}</h3>
+                <h3 class="text-xl font-semibold h-20 line-clamp-2 overflow-hidden">{{ novel.title }}</h3>
                 <p class="text-gray-600">{{ novel.description[:100] }}...</p>
                 <div class="flex justify-center mt-2">
                     <a href="{{ url_for('novel', novel_id=novel.id) }}" class="text-blue-600 hover:underline border border-blue-600 rounded-full px-4 py-1 hover:bg-blue-600 hover:text-white">Read Now</a>

@@ -3,7 +3,7 @@
 {% block content %}
 <div class="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-6 rounded shadow">
     <h1 class="text-2xl font-bold">{{ novel.title }}</h1>
-    <img src="{{ url_for('static', filename='img/' + (novel.cover_image or 'cover.jpg')) }}" alt="{{ novel.title }} 封面" class="w-full h-64 object-cover mt-4">
+    <img src="{{ url_for('static', filename='img/' + (novel.cover_image or 'cover.jpg')) }}" alt="{{ novel.title }} 封面" class="w-full h-[23rem] object-cover mt-4">
     <p class="mt-4 text-gray-700 dark:text-gray-300">{{ novel.description }}</p>
     <p class="mt-2 text-gray-500 dark:text-gray-400">Category: {{ novel.category or 'None' }}</p>
     <h2 class="text-xl font-bold mt-6">Chapter List</h2>
