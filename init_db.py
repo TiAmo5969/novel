@@ -13,15 +13,15 @@ with app.app_context():
 
     # 添加小说和章节
     novel1 = Novel(
-        title="黑暗森林",
-        description="一部史诗般的奇幻冒险小说，讲述英雄对抗黑暗势力的故事。",
-        cover_image="cover_fantasy.jpg",
+        title="Transmigration: Defying Fate for Immortality",
+        description="Yang Zaochen travels through time and is reborn into a different world. At the beginning, I found a stunning beauty. Millions of years ago, an old monster came with a big gift package to steal it.",
+        cover_image="Domineering.png",
         category="奇幻"
     )
     novel2 = Novel(
         title="倾城之恋",
         description="一段缠绵悱恻的现代言情故事，描绘都市中的爱情与抉择。",
-        cover_image="cover_romance.jpg",
+        cover_image="Domineering.png",
         category="言情"
     )
     db.session.add_all([novel1, novel2])
@@ -29,7 +29,7 @@ with app.app_context():
     # 为黑暗森林添加章节
     chapter1_1 = Chapter(
         novel=novel1,
-        title="第一章：魔法森林",
+        title="Chapter 1: Time Travel Rebirth",
         content="在神秘的魔法森林中，英雄艾伦开始了冒啊达瓦达瓦达瓦达瓦达瓦低洼地我去达瓦达瓦德瓦达达娃哒哒哒伟大的险……（约500字内容）。"
     )
     chapter1_2 = Chapter(

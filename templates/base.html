@@ -1,40 +1,40 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}{% endblock %} |    TaleTap</title>
+    <title>{% block title %}{% endblock %} |  TaleTap</title>
     <meta name="description" content="在TaleTap免费阅读小说，畅享奇幻、言情等精彩内容！">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tailwind.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2786216806192691"
      crossorigin="anonymous"></script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 transition-colors duration-300">
-    <nav class="bg-blue-600 text-white p-4 flex justify-between items-center">
-        <div class="flex items-center space-x-4">
-
-            <a href="{{ url_for('index') }}" class="text-lg font-bold">小说网站</a>
-        </div>
-        <div class="flex items-center space-x-4">
-            <a href="{{ url_for('index') }}" class="mx-2">首页</a>
-            <a href="/category/fantasy" class="mx-2">奇幻</a>
-            <a href="/category/romance" class="mx-2">言情</a>
-            {% if current_user.is_authenticated %}
-                {% if current_user.username == 'admin' %}
-                    <a href="{{ url_for('admin_dashboard') }}" class="mx-2">后台管理</a>
+<body class="flex flex-col min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <header class="bg-blue-600 text-white p-4">
+        <nav class="container mx-auto flex justify-between items-center">
+            <a href="{{ url_for('index') }}" class="text-2xl font-bold">TaleTap</a>
+            <ul class="flex space-x-4">
+                <li><a href="{{ url_for('index') }}" class="hover:text-blue-300">Home</a></li>
+                <li><a href="{{ url_for('category', category='Fantasy') }}" class="hover:text-blue-300">Fantasy</a></li>
+                <li><a href="{{ url_for('category', category='Romance') }}" class="hover:text-blue-300">Romance</a></li>
+                {% if current_user.is_authenticated %}
+                    {% if current_user.username == 'admin' %}
+                        <li><a href="{{ url_for('admin_dashboard') }}" class="hover:text-blue-300">Admin</a></li>
+                    {% endif %}
+                    <li><a href="{{ url_for('logout') }}" class="hover:text-blue-300">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}" class="hover:text-blue-300">Login</a></li>
+                    <li><a href="{{ url_for('register') }}" class="hover:text-blue-300">Register</a></li>
                 {% endif %}
-                <a href="{{ url_for('logout') }}" class="mx-2">退出</a>
-            {% else %}
-                <a href="{{ url_for('login') }}" class="mx-2">登录</a>
-                <a href="{{ url_for('register') }}" class="mx-2">注册</a>
-            {% endif %}
-        </div>
-    </nav>
-    <main class="container mx-auto p-4">
+            </ul>
+        </nav>
+    </header>
+    <main class="container mx-auto px-4 py-8 flex-grow">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
-                <div class="bg-red-100 text-red-700 p-4 rounded mb-4">
+                <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
                     {% for message in messages %}
                         <p>{{ message }}</p>
                     {% endfor %}
@@ -43,8 +43,9 @@
         {% endwith %}
         {% block content %}{% endblock %}
     </main>
-    <footer class="bg-gray-800 text-white p-4 text-center mt-8">
-        <p>&copy; 2025 TaleTap. <a href="/privacy-policy">Privacy Policy</a></p>
+
+    <footer class="bg-gray-800 text-white p-4 text-center">
+        <p>&copy; 2025 TaleTap. <a href="/privacy-policy" class="text-blue-300 hover:underline">Privacy Policy</a></p>
     </footer>
     <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 </body>

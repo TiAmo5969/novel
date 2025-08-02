@@ -21,11 +21,23 @@
     </script>
     <h1 class="text-2xl font-bold">{{ chapter.title }}</h1>
     <p class="mt-4 text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{{ chapter.content }}</p>
-    <div class="flex justify-between mt-4">
-        {% if chapter.id > 1 %}
-        <a href="{{ url_for('chapter', novel_id=chapter.novel.id, chapter_id=chapter.id-1) }}" class="text-blue-600 hover:underline">Previous</a>
+<!--    <div class="flex justify-between mt-4">-->
+<!--        {% if chapter.id > 1 %}-->
+<!--        <a href="{{ url_for('chapter', novel_id=chapter.novel.id, chapter_id=chapter.id-1) }}" class="text-blue-600 hover:underline">Previous</a>-->
+<!--        {% endif %}-->
+<!--        <a href="{{ url_for('chapter', novel_id=chapter.novel.id, chapter_id=chapter.id+1) }}" class="text-blue-600 hover:underline">Next</a>-->
+<!--    </div>-->
+        <div class="flex justify-between mt-4">
+        {% if prev_chapter_id %}
+            <a href="{{ url_for('chapter', novel_id=novel_id, chapter_id=prev_chapter_id) }}" class="text-blue-600 hover:underline">Previous Chapter</a>
+        {% else %}
+            <span class="text-gray-400">No Previous Chapter</span>
         {% endif %}
-        <a href="{{ url_for('chapter', novel_id=chapter.novel.id, chapter_id=chapter.id+1) }}" class="text-blue-600 hover:underline">Next</a>
+        {% if next_chapter_id %}
+            <a href="{{ url_for('chapter', novel_id=novel_id, chapter_id=next_chapter_id) }}" class="text-blue-600 hover:underline">Next Chapter</a>
+        {% else %}
+            <span class="text-gray-400">No Next Chapter</span>
+        {% endif %}
     </div>
     <!-- AdSense -->
     <div class="ad-container mt-6">

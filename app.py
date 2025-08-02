@@ -32,18 +32,18 @@ def load_user(user_id):
 
 # 表单
 class LoginForm(FlaskForm):
-    username = StringField('用户名', validators=[DataRequired(), Length(min=4, max=80)])
-    password = PasswordField('密码', validators=[DataRequired()])
-    submit = SubmitField('登录')
+    username = StringField('Username', validators=[DataRequired(), Length(min=4, max=80)])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Login')
 
 class RegisterForm(FlaskForm):
-    username = StringField('用户名', validators=[DataRequired(), Length(min=4, max=80)])
-    password = PasswordField('密码', validators=[DataRequired(), Length(min=6)])
-    submit = SubmitField('注册')
+    username = StringField('Username', validators=[DataRequired(), Length(min=4, max=80)])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
+    submit = SubmitField('Register')
 
 class CommentForm(FlaskForm):
-    content = TextAreaField('评论', validators=[DataRequired(), Length(max=500)])
-    submit = SubmitField('提交')
+    content = TextAreaField('Comment', validators=[DataRequired(), Length(max=500)])
+    submit = SubmitField('Submit')
 
 class NovelForm(FlaskForm):
     title = StringField('小说标题', validators=[DataRequired(), Length(max=100)])
@@ -63,7 +63,7 @@ def admin_required(f):
     @login_required
     def decorated_function(*args, **kwargs):
         if current_user.username != 'admin':
-            flash('仅管理员可访问此页面')
+            flash('Only admins can access this page')  # '仅管理员可访问此页面'
             return redirect(url_for('index'))
         return f(*args, **kwargs)
     return decorated_function
@@ -79,11 +79,28 @@ def novel(novel_id):
     novel = Novel.query.get_or_404(novel_id)
     return render_template('novel.html', novel=novel)
 
+
 @app.route('/novel/<int:novel_id>/chapter/<int:chapter_id>')
 def chapter(novel_id, chapter_id):
     chapter = Chapter.query.get_or_404(chapter_id)
+    if chapter.novel_id != novel_id:
+        flash('Chapter does not belong to this novel')  # '章节不属于该小说'
+        return redirect(url_for('novel', novel_id=novel_id))
+
+    # 获取当前小说的所有章节，按 id 排序
+    chapters = Chapter.query.filter_by(novel_id=novel_id).order_by(Chapter.id).all()
+    chapter_ids = [c.id for c in chapters]
+
+    # 找到当前章节的索引
+    current_index = chapter_ids.index(chapter_id)
+
+    # 计算上一章和下一章的 ID
+    prev_chapter_id = chapter_ids[current_index - 1] if current_index > 0 else None
+    next_chapter_id = chapter_ids[current_index + 1] if current_index < len(chapter_ids) - 1 else None
+
     form = CommentForm()
-    return render_template('chapter.html', chapter=chapter, form=form)
+    return render_template('chapter.html', chapter=chapter, form=form,
+                           prev_chapter_id=prev_chapter_id, next_chapter_id=next_chapter_id, novel_id=novel_id)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -93,7 +110,7 @@ def login():
         if user and check_password_hash(user.password, form.password.data):
             login_user(user)
             return redirect(url_for('index'))
-        flash('用户名或密码错误')
+        flash('Invalid username or password')  # '用户名或密码错误'
     return render_template('login.html', form=form)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -101,7 +118,7 @@ def register():
     form = RegisterForm()
     if form.validate_on_submit():
         if User.query.filter_by(username=form.username.data).first():
-            flash('用户名已存在')
+            flash('Username already exists')  # '用户名已存在'
         else:
             user = User(username=form.username.data,
                        password=generate_password_hash(form.password.data))
