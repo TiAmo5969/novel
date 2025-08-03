@@ -182,6 +182,7 @@ def sitemap():
     # response = make_response(xml)
     # response.headers['Content-Type'] = 'application/xml'
     # return response
+    #返回根目录sitemap.xml文件
     return send_from_directory(ROOT_DIRECTORY, 'sitemap.xml')
 
 
