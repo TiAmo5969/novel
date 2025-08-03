@@ -19,6 +19,9 @@ app.config['UPLOAD_FOLDER'] = os.path.join('static', 'img')  # 图片保存目�
 app.config['ALLOWED_EXTENSIONS'] = {'png', 'jpg', 'jpeg', 'gif'}  # 允许的文件扩展名
 db.init_app(app)
 
+#定义根目录
+ROOT_DIRECTORY = os.path.dirname(os.path.abspath(__file__))
+
 # 检查文件扩展名
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
@@ -166,23 +169,25 @@ def add_to_shelf(novel_id):
 def privacy_policy():
     return render_template('privacy_policy.html')
 
-# @app.route('/sitemap.xml')
-# def sitemap():
-#     xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-#     xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-#     xml += f'<url><loc>https://taletap.org/</loc></url>\n'
-#     for novel in Novel.query.all():
-#         xml += f'<url><loc>https://taletap.org/novel/{novel.id}</loc>\n<lastmod>{novel.updated_at or datetime.utcnow().strftime('%Y-%m-%d')}</lastmod>\n</url>\n'
-#         for chapter in novel.chapters:
-#             xml += f'<url><loc>https://taletap.org/novel/{novel.id}/chapter/{chapter.id}</loc></url>\n'
-#     xml += '</urlset>'
-#     response = make_response(xml)
-#     response.headers['Content-Type'] = 'application/xml'
-#     return response
+@app.route('/sitemap.xml')
+def sitemap():
+    # xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    # xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    # xml += f'<url><loc>https://taletap.org/</loc></url>\n'
+    # for novel in Novel.query.all():
+    #     xml += f'<url><loc>https://taletap.org/novel/{novel.id}</loc></url>\n'
+    #     for chapter in novel.chapters:
+    #         xml += f'<url><loc>https://taletap.org/novel/{novel.id}/chapter/{chapter.id}</loc></url>\n'
+    # xml += '</urlset>'
+    # response = make_response(xml)
+    # response.headers['Content-Type'] = 'application/xml'
+    # return response
+    return send_from_directory(ROOT_DIRECTORY, 'sitemap.xml')
 
-# @app.route('/robots.txt')
-# def robots():
-#     return send_from_directory(app.static_folder, 'robots.txt')
+
+@app.route('/robots.txt')
+def robots():
+    return send_from_directory(app.static_folder, 'robots.txt')
 
 # 后台管理路由
 @app.route('/admin', endpoint='admin_dashboard')
