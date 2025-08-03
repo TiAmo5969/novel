@@ -81,8 +81,8 @@ def keep_alive():
 @app.route('/novel/<int:novel_id>')
 def novel(novel_id):
     novel = Novel.query.get_or_404(novel_id)
-    return render_template('novel.html', novel=novel)
-
+    related_novels = Novel.query.filter_by(category=novel.category).filter(Novel.id != novel_id).limit(3).all()
+    return render_template('novel.html', novel=novel, related_novels=related_novels)
 
 @app.route('/novel/<int:novel_id>/chapter/<int:chapter_id>')
 def chapter(novel_id, chapter_id):
@@ -151,7 +151,7 @@ def add_comment(chapter_id):
 @app.route('/category/<string:category>')
 def category(category):
     novels = Novel.query.filter_by(category=category).all()
-    return render_template('index.html', novels=novels, category=category)
+    return render_template('index.html', novels=novels, category=category,meta_description=f"Explore {category} novels on TaleTap.")
 
 @app.route('/add_to_shelf/<int:novel_id>', methods=['POST'])
 @login_required

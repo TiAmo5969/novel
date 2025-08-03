@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block title %}{{ chapter.title }} - {{ chapter.novel.title }}{% endblock %}
+{% block title %}{{ chapter.title }} - {{ chapter.novel.title }} - TaleTap{% endblock %}
+{% block meta_description %}Read {{ chapter.title }} from {{ chapter.novel.title }} on TaleTap.{% endblock %}
 {% block content %}
 <div class="bg-white dark:bg-gray-800 p-6 rounded shadow max-w-3xl mx-auto">
     <meta name="description" content="Read {{ chapter.title }} of {{ chapter.novel.title }} for free. Enjoy epic fantasy adventures on NovelSite!">
@@ -16,7 +17,8 @@
             "@type": "Book",
             "name": "{{ chapter.novel.title }}"
         },
-        "description": "{{ chapter.content[:200] | striptags }}"
+        "description": "{{ chapter.content[:200] | striptags }}",
+        "url": "https://taletap.org/novel/{{ chapter.novel_id }}/chapter/{{ chapter.id }}"
     }
     </script>
     <h1 class="text-2xl font-bold">{{ chapter.title }}</h1>
