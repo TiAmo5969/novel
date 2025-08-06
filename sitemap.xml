@@ -9,77 +9,257 @@
 
 <url>
   <loc>https://taletap.org/</loc>
-  <lastmod>2025-08-03T05:41:37+00:00</lastmod>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://taletap.org/category/Fantasy</loc>
-  <lastmod>2025-08-03T05:41:37+00:00</lastmod>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://taletap.org/category/Romance</loc>
-  <lastmod>2025-08-03T05:41:37+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://taletap.org/login</loc>
-  <lastmod>2025-08-03T05:41:37+00:00</lastmod>
-  <priority>0.80</priority>
-</url>
-<url>
-  <loc>https://taletap.org/register</loc>
-  <lastmod>2025-08-03T05:41:37+00:00</lastmod>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://taletap.org/novel/1</loc>
-  <lastmod>2025-08-03T05:41:37+00:00</lastmod>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://taletap.org/novel/2</loc>
-  <lastmod>2025-08-03T05:41:37+00:00</lastmod>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://taletap.org/novel/3</loc>
-  <lastmod>2025-08-03T05:41:37+00:00</lastmod>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://taletap.org/privacy-policy</loc>
-  <lastmod>2025-08-03T05:41:37+00:00</lastmod>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://taletap.org/novel/1/chapter/1</loc>
-  <lastmod>2025-08-03T05:41:37+00:00</lastmod>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://taletap.org/novel/1/chapter/2</loc>
-  <lastmod>2025-08-03T05:41:37+00:00</lastmod>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://taletap.org/novel/1/chapter/5</loc>
-  <lastmod>2025-08-03T05:41:37+00:00</lastmod>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/8</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/9</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/10</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/11</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/12</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/13</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/14</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/15</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/16</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/17</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/18</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/19</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/20</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/21</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/22</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/23</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/24</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/25</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/26</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/27</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/28</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/29</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/30</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/31</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/32</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/33</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/34</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/35</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/36</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/37</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/38</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/39</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/40</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/41</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/42</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/43</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/1/chapter/44</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://taletap.org/novel/2/chapter/3</loc>
-  <lastmod>2025-08-03T05:41:37+00:00</lastmod>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://taletap.org/novel/2/chapter/4</loc>
-  <lastmod>2025-08-03T05:41:37+00:00</lastmod>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://taletap.org/novel/3/chapter/6</loc>
-  <lastmod>2025-08-03T05:41:37+00:00</lastmod>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://taletap.org/novel/3/chapter/7</loc>
+  <lastmod>2025-08-06T10:15:13+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 
