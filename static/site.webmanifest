@@ -1,0 +1,30 @@
+{
+    "name": "TaleTap - Free Online Novels",
+    "short_name": "TaleTap",
+    "description": "Discover and read amazing novels for free. Fantasy, Romance, Sci-Fi, Mystery and more genres available.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#0ea5e9",
+    "orientation": "portrait-primary",
+    "icons": [
+        {
+            "src": "/static/favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png"
+        },
+        {
+            "src": "/static/favicon-32x32.png",
+            "sizes": "32x32",
+            "type": "image/png"
+        },
+        {
+            "src": "/static/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        }
+    ],
+    "categories": ["books", "entertainment", "education"],
+    "lang": "en",
+    "dir": "ltr"
+} 

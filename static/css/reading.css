@@ -1,0 +1,328 @@
+/* Reading Experience Enhancements */
+.reading-container {
+    max-width: 65ch;
+    margin: 0 auto;
+    line-height: 1.8;
+    font-size: 1.125rem;
+    color: #374151;
+}
+
+.dark .reading-container {
+    color: #d1d5db;
+}
+
+.reading-container p {
+    margin-bottom: 1.5rem;
+    text-align: justify;
+    text-indent: 1.5em;
+}
+
+.reading-container h1,
+.reading-container h2,
+.reading-container h3 {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+.dark .reading-container h1,
+.dark .reading-container h2,
+.dark .reading-container h3 {
+    color: #f9fafb;
+}
+
+.reading-container blockquote {
+    border-left: 4px solid #0ea5e9;
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    background: #f8fafc;
+    padding: 1.5rem;
+    border-radius: 0 8px 8px 0;
+    position: relative;
+}
+
+.dark .reading-container blockquote {
+    background: #1e293b;
+    border-left-color: #38bdf8;
+}
+
+.reading-container blockquote::before {
+    content: '"';
+    font-size: 3rem;
+    color: #0ea5e9;
+    position: absolute;
+    top: -0.5rem;
+    left: 1rem;
+    font-family: Georgia, serif;
+}
+
+.dark .reading-container blockquote::before {
+    color: #38bdf8;
+}
+
+/* Reading Progress Bar */
+.reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #0ea5e9, #d946ef);
+    z-index: 9999;
+    transition: width 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Font Size Controls */
+.font-controls {
+    position: sticky;
+    top: 1rem;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 0.75rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.dark .font-controls {
+    background: rgba(31, 41, 55, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Chapter Navigation */
+.chapter-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    margin: 2rem 0;
+}
+
+.dark .chapter-nav {
+    background: #1f2937;
+}
+
+.chapter-nav a {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.chapter-nav .prev-chapter {
+    background: #0ea5e9;
+    color: white;
+}
+
+.chapter-nav .prev-chapter:hover {
+    background: #0284c7;
+    transform: translateX(-2px);
+}
+
+.chapter-nav .next-chapter {
+    background: #0ea5e9;
+    color: white;
+}
+
+.chapter-nav .next-chapter:hover {
+    background: #0284c7;
+    transform: translateX(2px);
+}
+
+.chapter-nav .back-to-novel {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.dark .chapter-nav .back-to-novel {
+    background: #374151;
+    color: #d1d5db;
+}
+
+.chapter-nav .back-to-novel:hover {
+    background: #e5e7eb;
+}
+
+.dark .chapter-nav .back-to-novel:hover {
+    background: #4b5563;
+}
+
+/* Comments Section */
+.comments-section {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dark .comments-section {
+    background: #1f2937;
+}
+
+.comment-form {
+    margin-bottom: 2rem;
+}
+
+.comment-form textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+}
+
+.dark .comment-form textarea {
+    background: #374151;
+    border-color: #4b5563;
+    color: #d1d5db;
+}
+
+.comment-form textarea:focus {
+    outline: none;
+    border-color: #0ea5e9;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+}
+
+.comment-item {
+    padding: 1.5rem;
+    background: #f9fafb;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.dark .comment-item {
+    background: #374151;
+}
+
+.comment-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.comment-author {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.author-avatar {
+    width: 2rem;
+    height: 2rem;
+    background: #0ea5e9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.comment-date {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.dark .comment-date {
+    color: #9ca3af;
+}
+
+/* Related Novels */
+.related-novels {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.dark .related-novels {
+    background: #1f2937;
+}
+
+.related-novel-card {
+    padding: 1.5rem;
+    background: #f9fafb;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+}
+
+.dark .related-novel-card {
+    background: #374151;
+}
+
+.related-novel-card:hover {
+    background: #f3f4f6;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dark .related-novel-card:hover {
+    background: #4b5563;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .reading-container {
+        max-width: 100%;
+        padding: 0 1rem;
+        font-size: 1rem;
+    }
+    
+    .chapter-nav {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .chapter-nav a {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .font-controls {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        top: auto;
+    }
+}
+
+/* Print Styles */
+@media print {
+    .reading-progress,
+    .font-controls,
+    .chapter-nav,
+    .comments-section,
+    .related-novels {
+        display: none;
+    }
+    
+    .reading-container {
+        max-width: none;
+        font-size: 12pt;
+        line-height: 1.6;
+    }
+    
+    .reading-container p {
+        text-align: left;
+        text-indent: 2em;
+    }
+} 

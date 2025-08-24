@@ -1,6 +1,26 @@
 User-agent: *
+Allow: /
+Allow: /novel/
+Allow: /category/
+Allow: /privacy-policy
+
 Disallow: /admin
 Disallow: /login
 Disallow: /register
-Allow: /
+Disallow: /static/admin/
+Disallow: /__pycache__/
+Disallow: /static/img/admin/
+
+# Allow important pages
+Allow: /sitemap.xml
+Allow: /robots.txt
+Allow: /ads.txt
+
+# Crawl delay for better server performance
+Crawl-delay: 1
+
+# Sitemap location
 Sitemap: https://taletap.org/sitemap.xml
+
+# Additional sitemaps if available
+Sitemap: https://taletap.org/sitemap1.xml
