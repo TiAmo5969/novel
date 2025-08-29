@@ -1,5 +1,25 @@
 User-agent: *
 Allow: /
+
+# Sitemap
+Sitemap: https://taletap.org/sitemap.xml
+
+# Allow all major search engines
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# Disallow admin areas
+User-agent: *
+Disallow: /admin/
+
+# Crawl-delay for politeness
+Crawl-delay: 1
 Allow: /novel/
 Allow: /category/
 Allow: /privacy-policy

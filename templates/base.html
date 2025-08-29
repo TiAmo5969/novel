@@ -33,6 +33,13 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="TaleTap">
+    
+    <!-- Additional SEO improvements -->
+    <meta name="rating" content="General">
+    <meta name="distribution" content="Global">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    <link rel="alternate" type="application/rss+xml" title="TaleTap RSS Feed" href="{{ url_for('index') }}rss.xml">
 
     <!-- Favicon -->
     <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
@@ -155,6 +162,10 @@
             letter-spacing: 0.02em;
             font-size: 1.125rem;
         }
+        /* 章节锚点偏移，避免被导航栏遮挡 */
+        #chapters {
+            scroll-margin-top: 100px;
+        }
         .glass-effect {
             backdrop-filter: blur(10px);
             background: rgba(255, 255, 255, 0.1);
@@ -165,6 +176,18 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            /* Fallback for browsers that don't support background-clip: text */
+            color: #667eea;
+            /* Ensure proper line height to prevent clipping */
+            line-height: 1.2;
+            padding-bottom: 0.1em;
+        }
+        /* Support check for gradient text */
+        @supports not (-webkit-background-clip: text) {
+            .gradient-text {
+                color: #667eea !important;
+                background: none !important;
+            }
         }
         .hover-lift {
             transition: all 0.3s ease;
@@ -322,8 +345,9 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 9-7 7-7-7"/>
                             </svg>
                         </button>
-                        <div class="absolute top-full left-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-gray-200 dark:border-gray-700">
+                        <div class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-gray-200 dark:border-gray-700">
                             <div class="py-2">
+                                <a href="{{ url_for('category', category='Recommended') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600">Recommended</a>
                                 <a href="{{ url_for('category', category='Fantasy') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600">Fantasy</a>
                                 <a href="{{ url_for('category', category='Romance') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600">Romance</a>
                                 <a href="{{ url_for('category', category='Sci-Fi') }}" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600">Sci-Fi</a>
@@ -393,10 +417,12 @@
                 <a href="{{ url_for('index') }}" class="block text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors font-medium">Home</a>
                 <div class="space-y-2">
                     <p class="text-sm font-semibold text-gray-500 dark:text-gray-400">Genres</p>
+                    <a href="{{ url_for('category', category='Recommended') }}" class="block pl-4 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Recommended</a>
                     <a href="{{ url_for('category', category='Fantasy') }}" class="block pl-4 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Fantasy</a>
                     <a href="{{ url_for('category', category='Romance') }}" class="block pl-4 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Romance</a>
                     <a href="{{ url_for('category', category='Sci-Fi') }}" class="block pl-4 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Sci-Fi</a>
                     <a href="{{ url_for('category', category='Mystery') }}" class="block pl-4 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Mystery</a>
+                    <a href="{{ url_for('category', category='Thriller') }}" class="block pl-4 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Thriller</a>
                 </div>
                 <a href="{{ url_for('privacy_policy') }}" class="block text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors font-medium">Privacy Policy</a>
                 {% if not current_user.is_authenticated %}
@@ -483,10 +509,12 @@
                 <div>
                     <h4 class="text-lg font-semibold mb-4">Genres</h4>
                     <ul class="space-y-2">
+                        <li><a href="{{ url_for('category', category='Recommended') }}" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Recommended</a></li>
                         <li><a href="{{ url_for('category', category='Fantasy') }}" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Fantasy</a></li>
                         <li><a href="{{ url_for('category', category='Romance') }}" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Romance</a></li>
                         <li><a href="{{ url_for('category', category='Sci-Fi') }}" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Sci-Fi</a></li>
                         <li><a href="{{ url_for('category', category='Mystery') }}" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Mystery</a></li>
+                        <li><a href="{{ url_for('category', category='Thriller') }}" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors">Thriller</a></li>
                     </ul>
                 </div>
             </div>
@@ -497,9 +525,10 @@
                         © 2025 TaleTap. All rights reserved.
                     </p>
                     <div class="flex space-x-6 mt-4 md:mt-0">
+                        <a href="{{ url_for('about') }}" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors text-sm">About</a>
                         <a href="{{ url_for('privacy_policy') }}" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors text-sm">Privacy Policy</a>
-                        <a href="/terms" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors text-sm">Terms of Service</a>
-                        <a href="/contact" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors text-sm">Contact</a>
+                        <a href="{{ url_for('terms_of_service') }}" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors text-sm">Terms of Service</a>
+                        <a href="{{ url_for('contact') }}" class="text-gray-600 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors text-sm">Contact</a>
                     </div>
                 </div>
             </div>

@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block title %}About Us - TaleTap{% endblock %}
+{% block meta_description %}Learn about TaleTap, your premier destination for free online novels. Discover our mission, team, and commitment to providing quality reading experiences.{% endblock %}
+{% block meta_keywords %}about TaleTap, online novels, free reading platform, our mission, our team{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-8 mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-6">About TaleTap</h1>
+        
+        <div class="prose prose-lg max-w-none dark:prose-invert">
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Our Mission</h2>
+            <p class="text-gray-700 dark:text-gray-300 mb-6">
+                TaleTap is dedicated to providing readers worldwide with free access to high-quality novels across multiple genres. We believe that great storytelling should be accessible to everyone, regardless of their location or financial situation. Our platform serves as a bridge between talented authors and passionate readers, fostering a community built around the love of literature.
+            </p>
+
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">What We Offer</h2>
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">Diverse Genres</h3>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        From epic fantasy adventures to heartwarming romance, thrilling mysteries to cutting-edge sci-fi, we curate content across all major literary genres.
+                    </p>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">Quality Content</h3>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        Every novel on our platform is carefully selected and reviewed to ensure high-quality storytelling, proper formatting, and engaging narratives.
+                    </p>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">User-Friendly Experience</h3>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        Our platform features intuitive navigation, customizable reading settings, and responsive design that works seamlessly across all devices.
+                    </p>
+                </div>
+                <div class="bg-gray-50 dark:bg-gray-700 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">Community Features</h3>
+                    <p class="text-gray-700 dark:text-gray-300">
+                        Connect with fellow readers through comments, reviews, and personalized reading lists. Share your favorite discoveries with the community.
+                    </p>
+                </div>
+            </div>
+
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Our Commitment</h2>
+            <p class="text-gray-700 dark:text-gray-300 mb-6">
+                We are committed to maintaining a safe, respectful, and inclusive environment for all users. Our content guidelines ensure that all material on our platform meets high standards of quality and appropriateness. We respect intellectual property rights and work diligently to ensure all content is properly licensed or falls under fair use guidelines.
+            </p>
+
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Privacy & Security</h2>
+            <p class="text-gray-700 dark:text-gray-300 mb-6">
+                Your privacy and security are our top priorities. We implement industry-standard security measures to protect your personal information and provide transparent privacy policies. We never sell your personal data to third parties and only collect information necessary to improve your reading experience.
+            </p>
+
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Contact Information</h2>
+            <div class="bg-primary-50 dark:bg-primary-900/20 p-6 rounded-lg mb-6">
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    We value your feedback and are always here to help. If you have any questions, suggestions, or concerns, please don't hesitate to reach out to us:
+                </p>
+                <ul class="list-disc pl-6 text-gray-700 dark:text-gray-300 space-y-2">
+                    <li><strong>Email:</strong> <a href="mailto:contact@taletap.org" class="text-primary-600 hover:underline">contact@taletap.org</a></li>
+                    <li><strong>Business Hours:</strong> Monday - Friday, 9:00 AM - 5:00 PM (UTC)</li>
+                    <li><strong>Response Time:</strong> We typically respond within 24-48 hours</li>
+                </ul>
+            </div>
+
+            <h2 class="text-2xl font-semibold text-gray-900 dark:text-white mb-4">Legal Information</h2>
+            <p class="text-gray-700 dark:text-gray-300 mb-4">
+                TaleTap operates in compliance with international copyright laws and digital content regulations. We are committed to:
+            </p>
+            <ul class="list-disc pl-6 mb-6 text-gray-700 dark:text-gray-300 space-y-2">
+                <li>Respecting authors' intellectual property rights</li>
+                <li>Providing proper attribution for all content</li>
+                <li>Responding promptly to valid DMCA takedown requests</li>
+                <li>Maintaining transparent terms of service and privacy policies</li>
+                <li>Complying with GDPR, CCPA, and other privacy regulations</li>
+            </ul>
+
+            <div class="bg-gray-100 dark:bg-gray-700 p-6 rounded-lg">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-3">Join Our Community</h3>
+                <p class="text-gray-700 dark:text-gray-300 mb-4">
+                    Whether you're a casual reader looking for your next great book or a dedicated bookworm seeking hidden gems, TaleTap welcomes you to join our growing community of literature enthusiasts.
+                </p>
+                <a href="{{ url_for('register') }}" class="inline-flex items-center px-6 py-3 text-white bg-primary-600 hover:bg-primary-700 rounded-lg font-medium transition-colors">
+                    Get Started Today
+                    <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

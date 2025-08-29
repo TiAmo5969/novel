@@ -17,6 +17,14 @@ class Novel(db.Model):
     cover_image = db.Column(db.String(200))  # 封面图片路径
     chapters = db.relationship('Chapter', backref='novel', lazy=True)
     category = db.Column(db.String(50))
+    author = db.Column(db.String(100), default='Unknown Author')
+    rating = db.Column(db.Float, default=0.0)
+    total_reads = db.Column(db.Integer, default=0)
+    total_bookmarks = db.Column(db.Integer, default=0)
+    total_reviews = db.Column(db.Integer, default=0)
+    status = db.Column(db.String(20), default='ongoing')  # 'ongoing', 'completed', 'hiatus'
+    created_at = db.Column(db.DateTime, default=lambda: datetime.utcnow())
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.utcnow(), onupdate=lambda: datetime.utcnow())
 
 class Chapter(db.Model):
     id = db.Column(db.Integer, primary_key=True)

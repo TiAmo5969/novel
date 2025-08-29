@@ -7,6 +7,7 @@ from wtforms import StringField, PasswordField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
+from datetime import datetime
 from models import db, User, Novel, Chapter, Comment, UserNovel
 
 app = Flask(__name__)
@@ -28,6 +29,59 @@ def allowed_file(filename):
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+
+# 模板过滤器
+@app.template_filter('safe_strftime')
+def safe_strftime(date_value, format_string='%b %Y'):
+    """安全地格式化日期，处理字符串和datetime对象"""
+    if not date_value:
+        return 'Unknown'
+    
+    # 如果是字符串（比如 'CURRENT_TIMESTAMP'），返回默认值
+    if isinstance(date_value, str):
+        if date_value == 'CURRENT_TIMESTAMP':
+            return 'Recent'
+        # 尝试解析ISO格式的日期字符串
+        try:
+            date_obj = datetime.fromisoformat(date_value.replace('Z', '+00:00'))
+            return date_obj.strftime(format_string)
+        except (ValueError, AttributeError):
+            return 'Recent'
+    
+    # 如果是datetime对象，直接格式化
+    try:
+        return date_value.strftime(format_string)
+    except (AttributeError, ValueError):
+        return 'Recent'
+
+@app.template_filter('format_paragraphs')
+def format_paragraphs(text):
+    """格式化段落，将换行符转换为HTML段落标签"""
+    if not text:
+        return ''
+    
+    # 将Windows和Unix换行符统一处理
+    text = text.replace('\r\n', '\n').replace('\r', '\n')
+    
+    # 按双换行符分割段落
+    paragraphs = text.split('\n\n')
+    
+    # 如果没有双换行符，按单换行符分割
+    if len(paragraphs) == 1:
+        paragraphs = text.split('\n')
+    
+    # 过滤空段落并包装在<p>标签中
+    formatted_paragraphs = []
+    for paragraph in paragraphs:
+        paragraph = paragraph.strip()
+        if paragraph:  # 跳过空段落
+            # 将单个换行符转换为<br>标签（主要用于诗歌或特殊格式）
+            paragraph = paragraph.replace('\n', '<br>')
+            
+            # 所有段落使用统一样式
+            formatted_paragraphs.append(f'<p class="mb-6 leading-relaxed text-gray-800 dark:text-gray-200 text-justify">{paragraph}</p>')
+    
+    return '\n'.join(formatted_paragraphs)
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -74,18 +128,37 @@ def admin_required(f):
 # 路由
 @app.route('/')
 def index():
-    novels = Novel.query.all()
-    return render_template('index.html', novels=novels)
+    # 获取推荐小说（所有小说的前4个）
+    recommended_novels = Novel.query.limit(4).all()
+    
+    # 获取奇幻小说（前4个）
+    fantasy_novels = Novel.query.filter_by(category='Fantasy').limit(4).all()
+    
+    # 获取言情小说（前4个）
+    romance_novels = Novel.query.filter_by(category='Romance').limit(4).all()
+    
+    return render_template('index.html', 
+                         recommended_novels=recommended_novels,
+                         fantasy_novels=fantasy_novels, 
+                         romance_novels=romance_novels)
 
 @app.route('/keep-alive')
 def keep_alive():
     return 'Server is running', 200
 
 @app.route('/novel/<int:novel_id>')
-def novel(novel_id):
+@app.route('/novel/<int:novel_id>/page/<int:page>')
+def novel(novel_id, page=1):
     novel = Novel.query.get_or_404(novel_id)
     related_novels = Novel.query.filter_by(category=novel.category).filter(Novel.id != novel_id).limit(3).all()
-    return render_template('novel.html', novel=novel, related_novels=related_novels)
+    
+    # 分页设置：每页20章
+    per_page = 20
+    chapters = Chapter.query.filter_by(novel_id=novel_id).order_by(Chapter.id).paginate(
+        page=page, per_page=per_page, error_out=False
+    )
+    
+    return render_template('novel.html', novel=novel, related_novels=related_novels, chapters=chapters)
 
 @app.route('/novel/<int:novel_id>/chapter/<int:chapter_id>')
 def chapter(novel_id, chapter_id):
@@ -154,7 +227,7 @@ def add_comment(chapter_id):
 @app.route('/category/<string:category>')
 def category(category):
     novels = Novel.query.filter_by(category=category).all()
-    return render_template('index.html', novels=novels, category=category,meta_description=f"Explore {category} novels on TaleTap.")
+    return render_template('category.html', novels=novels, category=category, meta_description=f"Explore {category} novels on TaleTap.")
 
 @app.route('/add_to_shelf/<int:novel_id>', methods=['POST'])
 @login_required
@@ -169,21 +242,59 @@ def add_to_shelf(novel_id):
 def privacy_policy():
     return render_template('privacy_policy.html')
 
+@app.route('/terms-of-service')
+def terms_of_service():
+    return render_template('terms_of_service.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/sitemap.xml')
 def sitemap():
-    # xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-    # xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-    # xml += f'<url><loc>https://taletap.org/</loc></url>\n'
-    # for novel in Novel.query.all():
-    #     xml += f'<url><loc>https://taletap.org/novel/{novel.id}</loc></url>\n'
-    #     for chapter in novel.chapters:
-    #         xml += f'<url><loc>https://taletap.org/novel/{novel.id}/chapter/{chapter.id}</loc></url>\n'
-    # xml += '</urlset>'
-    # response = make_response(xml)
-    # response.headers['Content-Type'] = 'application/xml'
-    # return response
-    #返回根目录sitemap.xml文件
-    return send_from_directory(ROOT_DIRECTORY, 'sitemap.xml')
+    from flask import make_response
+    
+    xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    
+    # 添加主页
+    xml += '<url><loc>https://taletap.org/</loc><lastmod>2025-01-01</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>\n'
+    
+    # 添加重要页面
+    important_pages = [
+        ('about', 'monthly', '0.8'),
+        ('contact', 'monthly', '0.6'),
+        ('privacy-policy', 'monthly', '0.5'),
+        ('terms-of-service', 'monthly', '0.5'),
+    ]
+    
+    for page, freq, priority in important_pages:
+        xml += f'<url><loc>https://taletap.org/{page}</loc><lastmod>2025-01-01</lastmod><changefreq>{freq}</changefreq><priority>{priority}</priority></url>\n'
+    
+    # 添加分类页面
+    categories = ['Fantasy', 'Romance', 'Sci-Fi', 'Mystery', 'Thriller', 'Recommended']
+    for category in categories:
+        xml += f'<url><loc>https://taletap.org/category/{category}</loc><lastmod>2025-01-01</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>\n'
+    
+    # 添加小说页面
+    novels = Novel.query.all()
+    for novel in novels:
+        xml += f'<url><loc>https://taletap.org/novel/{novel.id}</loc><lastmod>2025-01-01</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>\n'
+        
+        # 添加章节页面（只添加前几章，避免sitemap过大）
+        chapters = Chapter.query.filter_by(novel_id=novel.id).limit(5).all()
+        for chapter in chapters:
+            xml += f'<url><loc>https://taletap.org/novel/{novel.id}/chapter/{chapter.id}</loc><lastmod>2025-01-01</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>\n'
+    
+    xml += '</urlset>'
+    
+    response = make_response(xml)
+    response.headers['Content-Type'] = 'application/xml'
+    return response
 
 
 @app.route('/robots.txt')
