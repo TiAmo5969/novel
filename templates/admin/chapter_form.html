@@ -1,19 +1,1242 @@
 {% extends 'base.html' %}
 {% block title %}{{ title }}{% endblock %}
+
+{% block head %}
+<style>
+    .section-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        margin-bottom: 24px;
+        overflow: hidden;
+    }
+
+    .dark .section-card {
+        background: #1f2937;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    }
+
+    .section-header {
+        padding: 24px 24px 0 24px;
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 8px;
+    }
+
+    .dark .section-title {
+        color: #f9fafb;
+    }
+
+    .section-content {
+        padding: 24px;
+    }
+
+    .upload-zone {
+        border: 2px dashed #d1d5db;
+        border-radius: 12px;
+        padding: 48px 24px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .upload-zone:hover {
+        border-color: #3b82f6;
+        background: #f8fafc;
+    }
+
+    .dark .upload-zone {
+        border-color: #4b5563;
+        background: #374151;
+    }
+
+    .dark .upload-zone:hover {
+        border-color: #3b82f6;
+        background: #4b5563;
+    }
+
+    .upload-icon {
+        width: 48px;
+        height: 48px;
+        color: #9ca3af;
+        margin: 0 auto 16px;
+    }
+
+    .upload-text {
+        color: #6b7280;
+    }
+
+    .dark .upload-text {
+        color: #9ca3af;
+    }
+
+    .upload-main-text {
+        font-size: 18px;
+        font-weight: 500;
+        margin-bottom: 4px;
+    }
+
+    .upload-sub-text {
+        font-size: 14px;
+    }
+
+    .config-card {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 20px;
+    }
+
+    .dark .config-card {
+        background: #374151;
+        border-color: #4b5563;
+    }
+
+    .config-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 16px;
+    }
+
+    .dark .config-title {
+        color: #f9fafb;
+    }
+
+    .step-indicator {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        opacity: 0.5;
+        transition: all 0.3s ease;
+    }
+
+    .step-indicator.step-active {
+        opacity: 1;
+    }
+
+    .step-indicator.step-completed {
+        opacity: 1;
+        color: #10b981;
+    }
+
+    .step-number {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        font-size: 14px;
+        color: #6b7280;
+        margin-bottom: 8px;
+    }
+
+    .step-indicator.step-active .step-number {
+        background: #3b82f6;
+        color: white;
+    }
+
+    .step-indicator.step-completed .step-number {
+        background: #10b981;
+        color: white;
+    }
+
+    .step-label {
+        font-size: 12px;
+        font-weight: 500;
+        text-align: center;
+        color: #6b7280;
+    }
+
+    .step-indicator.step-active .step-label {
+        color: #3b82f6;
+    }
+
+    .step-indicator.step-completed .step-label {
+        color: #10b981;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .info-item {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 16px;
+    }
+
+    .dark .info-item {
+        background: #374151;
+        border-color: #4b5563;
+    }
+
+    .info-label {
+        font-size: 12px;
+        font-weight: 500;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 4px;
+    }
+
+    .info-value {
+        font-size: 16px;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .dark .info-value {
+        color: #f9fafb;
+    }
+
+    .log-entry {
+        padding: 8px 12px;
+        margin-bottom: 4px;
+        border-radius: 6px;
+        font-size: 14px;
+        font-family: 'Courier New', monospace;
+    }
+
+    .log-info {
+        background: #eff6ff;
+        color: #1e40af;
+        border-left: 3px solid #3b82f6;
+    }
+
+    .dark .log-info {
+        background: #1e3a8a;
+        color: #93c5fd;
+    }
+
+    .log-success {
+        background: #f0fdf4;
+        color: #166534;
+        border-left: 3px solid #10b981;
+    }
+
+    .dark .log-success {
+        background: #064e3b;
+        color: #6ee7b7;
+    }
+
+    .log-error {
+        background: #fef2f2;
+        color: #dc2626;
+        border-left: 3px solid #ef4444;
+    }
+
+    .dark .log-error {
+        background: #7f1d1d;
+        color: #fca5a5;
+    }
+
+    .mode-tabs {
+        display: flex;
+        background: #f3f4f6;
+        border-radius: 8px;
+        padding: 4px;
+        margin-bottom: 24px;
+    }
+
+    .dark .mode-tabs {
+        background: #374151;
+    }
+
+    .mode-tab {
+        flex: 1;
+        padding: 12px 24px;
+        text-align: center;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        color: #6b7280;
+    }
+
+    .dark .mode-tab {
+        color: #9ca3af;
+    }
+
+    .mode-tab.active {
+        background: white;
+        color: #1f2937;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .dark     .mode-tab.active {
+        background: #1f2937;
+        color: #f9fafb;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .status-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .status-item {
+        text-align: center;
+        padding: 16px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+    }
+
+    .dark .status-item {
+        background: #374151;
+        border-color: #4b5563;
+    }
+
+    .status-label {
+        font-size: 12px;
+        font-weight: 500;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 4px;
+    }
+
+    .dark .status-label {
+        color: #9ca3af;
+    }
+
+    .status-value {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .dark .status-value {
+        color: #f9fafb;
+    }
+
+    .progress-card {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 24px;
+    }
+
+    .dark .progress-card {
+        background: #374151;
+        border-color: #4b5563;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="max-w-md mx-auto bg-white dark:bg-gray-800 p-6 rounded shadow">
-    <h1 class="text-2xl font-bold mb-4">{{ title }} - {{ novel.title }}</h1>
-    <form method="POST">
-        {{ form.hidden_tag() }}
-        <div class="mb-4">
-            {{ form.title.label }} {{ form.title(class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white") }}
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <!-- 页面标题 -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            📖 {{ title }} - {{ novel.title }}
+        </h1>
+        <p class="text-gray-600 dark:text-gray-400">
+            为小说《{{ novel.title }}》添加章节，支持单章节添加或批量翻译添加
+        </p>
+    </div>
+
+    <!-- 模式选择标签 -->
+    <div class="mode-tabs">
+        <div class="mode-tab active" id="single-mode-tab" onclick="switchMode('single')">
+            📝 单章节添加
         </div>
-        <div class="mb-4">
-            {{ form.content.label }} {{ form.content(class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white h-32") }}
+        <div class="mode-tab" id="batch-mode-tab" onclick="switchMode('batch')">
+            🔄 批量翻译添加
         </div>
-        <div>
-            {{ form.submit(class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700") }}
+    </div>
+
+    <!-- 单章节添加模式 -->
+    <div id="single-mode" class="mode-content">
+        <div class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">📝 单章节添加</h2>
+            </div>
+            <div class="section-content">
+                <form method="POST" id="single-form">
+                    {{ form.hidden_tag() }}
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                章节标题 <span class="text-red-500">*</span>
+                            </label>
+                            {{ form.title(class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent") }}
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                章节内容 <span class="text-red-500">*</span>
+                            </label>
+                            {{ form.content(class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent", rows="10") }}
+                        </div>
+                        <div class="flex justify-end">
+                            {{ form.submit(class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors") }}
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
-    </form>
+    </div>
+
+    <!-- 批量翻译添加模式 -->
+    <div id="batch-mode" class="mode-content hidden">
+        <!-- 步骤指示器 -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between relative">
+                <div class="flex items-center">
+                    <div id="step-1-indicator" class="step-indicator step-active">
+                        <div class="step-number">1</div>
+                        <div class="step-label">上传文件</div>
+                    </div>
+                </div>
+                
+                <div class="flex-1 h-1 bg-gray-200 dark:bg-gray-700 mx-4">
+                    <div id="progress-bar-1" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%"></div>
+                </div>
+                
+                <div class="flex items-center">
+                    <div id="step-2-indicator" class="step-indicator">
+                        <div class="step-number">2</div>
+                        <div class="step-label">解析章节</div>
+                    </div>
+                </div>
+                
+                <div class="flex-1 h-1 bg-gray-200 dark:bg-gray-700 mx-4">
+                    <div id="progress-bar-2" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%"></div>
+                </div>
+                
+                <div class="flex items-center">
+                    <div id="step-3-indicator" class="step-indicator">
+                        <div class="step-number">3</div>
+                        <div class="step-label">AI翻译</div>
+                    </div>
+                </div>
+                
+                <div class="flex-1 h-1 bg-gray-200 dark:bg-gray-700 mx-4">
+                    <div id="progress-bar-3" class="h-full bg-blue-500 transition-all duration-300" style="width: 0%"></div>
+                </div>
+                
+                <div class="flex items-center">
+                    <div id="step-4-indicator" class="step-indicator">
+                        <div class="step-number">4</div>
+                        <div class="step-label">完成</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步骤1: 文件上传 -->
+        <div id="upload-section" class="section-card">
+            <div class="section-header">
+                <h2 class="section-title">📁 上传中文小说文件</h2>
+            </div>
+            <div class="section-content">
+                <!-- 文件上传区域 -->
+                <div class="upload-zone" id="upload-zone" onclick="document.getElementById('novel-file').click()">
+                    <div class="upload-content">
+                        <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                        </svg>
+                        <div class="upload-text">
+                            <div class="upload-main-text">点击上传或拖拽文件到此处</div>
+                            <div class="upload-sub-text">支持 TXT 格式，包含多章节的中文小说</div>
+                        </div>
+                    </div>
+                    <input type="file" id="novel-file" accept=".txt" style="display: none;" onchange="handleFileSelect(this)">
+                </div>
+
+                <!-- 文件信息显示 -->
+                <div id="file-info" class="hidden mt-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-lg">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <div>
+                            <div class="font-medium text-green-800 dark:text-green-200">文件已选择</div>
+                            <div class="text-sm text-green-600 dark:text-green-300">
+                                <span id="file-name"></span> - <span id="file-size"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 配置区域 -->
+                <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- API Key配置 -->
+                    <div class="config-card">
+                        <h3 class="config-title">🔑 API配置</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    通义千问API Key
+                                </label>
+                                <input type="password" id="api-key" 
+                                       class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                                       placeholder="留空使用默认API密钥">
+                                <div class="text-xs text-gray-500 mt-1">
+                                    🔗 <a href="https://dashscope.console.aliyun.com/" target="_blank" class="text-blue-600 underline">获取API Key</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 翻译配置 -->
+                    <div class="config-card">
+                        <h3 class="config-title">⚙️ 翻译配置</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" id="use-custom-prompt" class="mr-2" onchange="toggleCustomPrompt()">
+                                    <span class="font-medium text-gray-700 dark:text-gray-300">使用自定义提示词</span>
+                                </label>
+                            </div>
+                            
+                            <div id="custom-prompt-section" class="hidden">
+                                <textarea id="custom-prompt" 
+                                          class="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"
+                                          rows="3" 
+                                          placeholder="输入自定义翻译提示词..."></textarea>
+                            </div>
+                            
+                            <div>
+                                <label class="flex items-center text-sm">
+                                    <input type="checkbox" id="preview-mode" class="mr-2">
+                                    <span class="font-medium text-gray-700 dark:text-gray-300">预览模式 (只翻译前3章)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 开始解析按钮 -->
+                <div class="mt-6">
+                    <button id="analyze-btn" onclick="startAnalysis()" disabled
+                            class="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                        开始解析小说
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 步骤2: 解析结果 -->
+        <div id="parse-section" class="section-card hidden">
+            <div class="section-header">
+                <h2 class="section-title">📊 解析结果</h2>
+            </div>
+            <div class="section-content">
+                <!-- 小说基本信息 -->
+                <div id="novel-info" class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">标题</div>
+                        <div id="novel-title" class="info-value"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">作者</div>
+                        <div id="novel-author" class="info-value"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">分类</div>
+                        <div id="novel-category" class="info-value"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">章节数</div>
+                        <div id="chapter-count" class="info-value"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">总字数</div>
+                        <div id="total-words" class="info-value"></div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">预估成本</div>
+                        <div id="estimated-cost" class="info-value text-orange-600"></div>
+                    </div>
+                </div>
+
+                <!-- 章节预览 -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">📖 章节预览</h3>
+                    <div id="chapters-preview" class="space-y-3"></div>
+                </div>
+
+                <!-- 开始翻译按钮 -->
+                <div class="mt-6">
+                    <button id="translate-btn" onclick="startTranslation()" disabled
+                            class="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-400 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                        开始翻译章节
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步骤3: 翻译进度 -->
+        <div id="translate-section" class="section-card hidden">
+            <div class="section-header">
+                <h2 class="section-title">🤖 AI翻译进行中</h2>
+            </div>
+            <div class="section-content">
+                <!-- 总体进度 -->
+                <div class="progress-card">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">翻译进度</span>
+                        <span id="progress-percent" class="text-sm font-medium text-blue-600">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                        <div id="progress-bar" class="bg-blue-600 h-3 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                    <div class="mt-2 text-xs text-gray-500">
+                        <span id="progress-text">准备开始...</span>
+                    </div>
+                </div>
+
+                <!-- 当前状态 -->
+                <div class="status-grid">
+                    <div class="status-item">
+                        <div class="status-label">当前章节</div>
+                        <div id="current-chapter" class="status-value">-</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">已完成</div>
+                        <div id="completed-chapters" class="status-value text-green-600">0</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">失败数</div>
+                        <div id="failed-chapters" class="status-value text-red-600">0</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">累计成本</div>
+                        <div id="current-cost" class="status-value text-orange-600">¥0.00</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">已用时间</div>
+                        <div id="elapsed-time" class="status-value">0秒</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">成功率</div>
+                        <div id="success-rate" class="status-value">100%</div>
+                    </div>
+                </div>
+
+                <!-- 翻译日志 -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">📝 翻译日志</h3>
+                    <div id="translation-log" class="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 h-64 overflow-y-auto">
+                        <div class="text-gray-500 text-center py-4">等待开始翻译...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步骤4: 完成 -->
+        <div id="complete-section" class="section-card hidden">
+            <div class="section-header">
+                <h2 class="section-title">✅ 翻译完成</h2>
+            </div>
+            <div class="section-content">
+                <!-- 翻译结果统计 -->
+                <div id="result-stats" class="info-grid mb-6"></div>
+
+                <!-- 保存按钮 -->
+                <div class="flex justify-center">
+                    <button id="save-chapters-btn" onclick="saveChapters()"
+                            class="bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors">
+                        保存章节到数据库
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+// 全局变量
+let currentStep = 1;
+let selectedFile = null;
+let analysisData = null;
+let translationTaskId = null;
+let progressPollingInterval = null;
+
+// 模式切换
+function switchMode(mode) {
+    const singleTab = document.getElementById('single-mode-tab');
+    const batchTab = document.getElementById('batch-mode-tab');
+    const singleMode = document.getElementById('single-mode');
+    const batchMode = document.getElementById('batch-mode');
+    
+    if (mode === 'single') {
+        singleTab.classList.add('active');
+        batchTab.classList.remove('active');
+        singleMode.classList.remove('hidden');
+        batchMode.classList.add('hidden');
+    } else {
+        batchTab.classList.add('active');
+        singleTab.classList.remove('active');
+        batchMode.classList.remove('hidden');
+        singleMode.classList.add('hidden');
+    }
+}
+
+// 设置当前步骤
+function setStep(step) {
+    currentStep = step;
+    
+    // 更新步骤指示器
+    for (let i = 1; i <= 4; i++) {
+        const indicator = document.getElementById(`step-${i}-indicator`);
+        indicator.classList.remove('step-active', 'step-completed');
+        
+        if (i < step) {
+            indicator.classList.add('step-completed');
+        } else if (i === step) {
+            indicator.classList.add('step-active');
+        }
+    }
+}
+
+// 更新步骤进度条
+function updateStepProgress(step, percent) {
+    const progressBar = document.getElementById(`progress-bar-${step}`);
+    if (progressBar) {
+        progressBar.style.width = percent + '%';
+    }
+}
+
+// 处理文件选择
+function handleFileSelect(input) {
+    const file = input.files[0];
+    if (file) {
+        selectedFile = file;
+        document.getElementById('file-name').textContent = file.name;
+        document.getElementById('file-size').textContent = formatFileSize(file.size);
+        document.getElementById('file-info').classList.remove('hidden');
+        document.getElementById('analyze-btn').disabled = false;
+        updateStepProgress(1, 100);
+    }
+}
+
+// 切换自定义提示词
+function toggleCustomPrompt() {
+    const useCustom = document.getElementById('use-custom-prompt').checked;
+    const customSection = document.getElementById('custom-prompt-section');
+    
+    if (useCustom) {
+        customSection.classList.remove('hidden');
+    } else {
+        customSection.classList.add('hidden');
+    }
+}
+
+// 开始分析
+function startAnalysis() {
+    if (!selectedFile) {
+        alert('请先选择文件');
+        return;
+    }
+    
+    const apiKey = document.getElementById('api-key').value;
+    const customPrompt = document.getElementById('custom-prompt').value;
+    const previewMode = document.getElementById('preview-mode').checked;
+    
+    const formData = new FormData();
+    formData.append('novel_file', selectedFile);
+    formData.append('api_key', apiKey);
+    formData.append('custom_prompt', customPrompt);
+    formData.append('preview_mode', previewMode);
+    formData.append('novel_id', '{{ novel.id }}');
+    
+    const analyzeBtn = document.getElementById('analyze-btn');
+    analyzeBtn.disabled = true;
+    analyzeBtn.textContent = '分析中...';
+    
+    setStep(2);
+    updateStepProgress(2, 50);
+    
+    fetch('/admin/analyze-chapters', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            analysisData = data.data;
+            displayAnalysisResult(data.data);
+            document.getElementById('translate-btn').disabled = false;
+            updateStepProgress(2, 100);
+        } else {
+            alert('分析失败: ' + data.error);
+            updateStepProgress(2, 0);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('分析过程中出现错误');
+        updateStepProgress(2, 0);
+    })
+    .finally(() => {
+        analyzeBtn.disabled = false;
+        analyzeBtn.textContent = '开始解析小说';
+    });
+}
+
+// 显示分析结果
+function displayAnalysisResult(data) {
+    // 更新基本信息
+    document.getElementById('novel-title').textContent = data.title || '未知';
+    document.getElementById('novel-author').textContent = data.author || '未知';
+    document.getElementById('novel-category').textContent = data.category || '未知';
+    document.getElementById('chapter-count').textContent = data.chapter_count || 0;
+    document.getElementById('total-words').textContent = formatNumber(data.total_words || 0);
+    document.getElementById('estimated-cost').textContent = `¥${(data.estimated_cost || 0).toFixed(3)}`;
+    
+    // 显示章节预览
+    const chaptersPreview = document.getElementById('chapters-preview');
+    chaptersPreview.innerHTML = '';
+    
+    if (data.preview_chapters && data.preview_chapters.length > 0) {
+        data.preview_chapters.forEach((chapter, index) => {
+            const chapterDiv = document.createElement('div');
+            chapterDiv.className = 'p-4 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg';
+            chapterDiv.innerHTML = `
+                <div class="flex justify-between items-start mb-2">
+                    <h4 class="font-semibold text-gray-900 dark:text-white">${chapter.title}</h4>
+                    <span class="text-sm text-gray-500">${chapter.word_count} 字</span>
+                </div>
+                <p class="text-sm text-gray-600 dark:text-gray-400">${chapter.content_preview}</p>
+            `;
+            chaptersPreview.appendChild(chapterDiv);
+        });
+    }
+    
+    // 显示解析结果区域
+    document.getElementById('parse-section').classList.remove('hidden');
+}
+
+// 开始翻译
+function startTranslation() {
+    if (!analysisData) {
+        alert('请先分析文件');
+        return;
+    }
+    
+    // 清理之前的轮询
+    if (progressPollingInterval) {
+        clearInterval(progressPollingInterval);
+        progressPollingInterval = null;
+    }
+    // 注意：不要在这里清理translationTaskId，因为轮询需要它
+    
+    const customPrompt = document.getElementById('custom-prompt').value;
+    const previewMode = document.getElementById('preview-mode').checked;
+    
+    const requestData = {
+        analysis_id: analysisData.analysis_id,
+        custom_prompt: customPrompt,
+        preview_mode: previewMode,
+        novel_id: '{{ novel.id }}'
+    };
+    
+    const translateBtn = document.getElementById('translate-btn');
+    translateBtn.disabled = true;
+    translateBtn.textContent = '翻译中...';
+    
+    // 重置进度显示
+    document.getElementById('progress-bar').style.width = '0%';
+    document.getElementById('progress-percent').textContent = '0%';
+    document.getElementById('progress-text').textContent = '准备开始...';
+    document.getElementById('current-chapter').textContent = '-';
+    document.getElementById('completed-chapters').textContent = '0';
+    document.getElementById('failed-chapters').textContent = '0';
+    document.getElementById('current-cost').textContent = '¥0.00';
+    document.getElementById('elapsed-time').textContent = '0秒';
+    document.getElementById('success-rate').textContent = '100%';
+    
+    // 清空日志
+    const logContainer = document.getElementById('translation-log');
+    logContainer.innerHTML = '<div class="text-gray-500 text-center py-4">等待开始翻译...</div>';
+    
+    // 显示翻译进度区域
+    setStep(3);
+    updateStepProgress(3, 0);
+    document.getElementById('translate-section').classList.remove('hidden');
+    
+    fetch('/admin/translate-chapters', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            translationTaskId = data.task_id;
+            startProgressPolling();
+        } else {
+            console.error('翻译启动失败:', data.error);
+            alert('翻译启动失败: ' + data.error);
+            // 恢复按钮状态
+            translateBtn.disabled = false;
+            translateBtn.textContent = '开始翻译章节';
+            // 隐藏翻译进度区域
+            document.getElementById('translate-section').classList.add('hidden');
+            setStep(2);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('翻译过程中出现错误');
+        // 恢复按钮状态
+        translateBtn.disabled = false;
+        translateBtn.textContent = '开始翻译章节';
+        // 隐藏翻译进度区域
+        document.getElementById('translate-section').classList.add('hidden');
+        setStep(2);
+    });
+}
+
+// 开始进度轮询
+function startProgressPolling() {
+    if (progressPollingInterval) {
+        clearInterval(progressPollingInterval);
+        progressPollingInterval = null;
+    }
+    
+    if (!translationTaskId) {
+        console.error('错误：没有task_id，无法开始轮询');
+        return;
+    }
+    
+    progressPollingInterval = setInterval(() => {
+        if (!translationTaskId) {
+            console.log('translationTaskId为空，停止轮询');
+            clearInterval(progressPollingInterval);
+            progressPollingInterval = null;
+            return;
+        }
+        
+        fetch(`/admin/chapter-translation-progress/${translationTaskId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                console.log('收到进度数据:', {
+                    status: data.status,
+                    current_chapter: data.progress?.current_chapter,
+                    total_chapters: data.progress?.total_chapters,
+                    progress_percent: data.progress?.progress_percent
+                });
+                
+                updateProgress(data);
+                
+                // 检查完成条件：只有状态为completed或error时才停止
+                const isCompleted = data.status === 'completed' || data.status === 'error';
+                
+                if (isCompleted) {
+                    console.log('翻译完成，停止轮询:', {
+                        status: data.status,
+                        isCompleted,
+                        current_chapter: data.progress?.current_chapter,
+                        total_chapters: data.progress?.total_chapters
+                    });
+                    
+                    // 立即停止轮询
+                    if (progressPollingInterval) {
+                        clearInterval(progressPollingInterval);
+                        progressPollingInterval = null;
+                    }
+                    handleTranslationComplete(data);
+                }
+            } else {
+                console.error('Progress polling failed:', data.error);
+                // 如果请求失败，也停止轮询
+                if (progressPollingInterval) {
+                    clearInterval(progressPollingInterval);
+                    progressPollingInterval = null;
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Progress polling error:', error);
+            // 网络错误时也停止轮询
+            if (progressPollingInterval) {
+                clearInterval(progressPollingInterval);
+                progressPollingInterval = null;
+            }
+        });
+    }, 1000); // 减少轮询间隔到1秒
+}
+
+// 更新进度
+function updateProgress(data) {
+    // 检查数据结构是否有效
+    if (!data || !data.progress) {
+        console.warn('进度数据无效:', data);
+        return;
+    }
+    
+    const progress = data.progress;
+    
+    // 更新进度条
+    const percent = progress.progress_percent || 0;
+    document.getElementById('progress-bar').style.width = percent + '%';
+    document.getElementById('progress-percent').textContent = percent.toFixed(1) + '%';
+    updateStepProgress(3, percent);
+    
+    // 更新状态信息（与novel_translator.html保持一致）
+    document.getElementById('current-chapter').textContent = progress.current_chapter_title || '-';
+    document.getElementById('completed-chapters').textContent = progress.success_count || 0;
+    document.getElementById('failed-chapters').textContent = progress.error_count || 0;
+    document.getElementById('current-cost').textContent = '¥' + (progress.estimated_cost || 0).toFixed(3);
+    document.getElementById('elapsed-time').textContent = formatTime(progress.elapsed_time || 0);
+    document.getElementById('success-rate').textContent = (progress.success_rate || 100).toFixed(1) + '%';
+    
+    // 更新进度文本
+    let progressText;
+    if (data.status === 'completed') {
+        progressText = `翻译完成！共 ${progress.total_chapters} 章`;
+    } else if (progress.current_chapter >= progress.total_chapters) {
+        progressText = `翻译完成！共 ${progress.total_chapters} 章`;
+    } else {
+        progressText = `正在翻译第 ${progress.current_chapter}/${progress.total_chapters} 章`;
+    }
+    document.getElementById('progress-text').textContent = progressText;
+    
+    // 添加日志
+    if (data.log_message) {
+        addLogEntry(data.log_message, data.log_level || 'info');
+    }
+}
+
+// 处理翻译完成
+function handleTranslationComplete(data) {
+    // 确保轮询已停止
+    if (progressPollingInterval) {
+        clearInterval(progressPollingInterval);
+        progressPollingInterval = null;
+    }
+    
+    if (data.status === 'completed' && data.result) {
+        // 保存翻译结果到analysisData
+        analysisData.translated_chapters = data.result.chapters;
+        
+        // 显示完成统计
+        displayCompletionStats(data);
+        
+        // 显示完成区域，隐藏翻译进度区域
+        document.getElementById('translate-section').classList.add('hidden');
+        document.getElementById('complete-section').classList.remove('hidden');
+        setStep(4);
+        updateStepProgress(4, 100);
+        
+        addLogEntry('翻译完成！', 'success');
+        
+        // 清理任务ID
+        translationTaskId = null;
+    } else {
+        // 翻译失败时恢复按钮状态
+        const translateBtn = document.getElementById('translate-btn');
+        translateBtn.disabled = false;
+        translateBtn.textContent = '开始翻译章节';
+        
+        // 隐藏翻译进度区域
+        document.getElementById('translate-section').classList.add('hidden');
+        setStep(2);
+        
+        addLogEntry('翻译失败: ' + (data.error || '未知错误'), 'error');
+        translationTaskId = null;
+    }
+}
+
+// 显示完成统计
+function displayCompletionStats(data) {
+    const resultStats = document.getElementById('result-stats');
+    const stats = data.stats || {};
+    
+    // 计算总字数
+    const totalWords = data.result.chapters.reduce((sum, chapter) => {
+        return sum + (chapter.content ? chapter.content.length : 0);
+    }, 0);
+    
+    resultStats.innerHTML = `
+        <div class="info-item">
+            <div class="info-label">章节数</div>
+            <div class="info-value">${data.result.chapters.length}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">总字数</div>
+            <div class="info-value">${formatNumber(totalWords)}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">成功翻译</div>
+            <div class="info-value text-green-600">${stats.success_count || 0}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">翻译失败</div>
+            <div class="info-value text-red-600">${stats.error_count || 0}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">总成本</div>
+            <div class="info-value text-orange-600">¥${(stats.total_cost || 0).toFixed(3)}</div>
+        </div>
+        <div class="info-item">
+            <div class="info-label">耗时</div>
+            <div class="info-value">${formatTime(stats.elapsed_time || 0)}</div>
+        </div>
+    `;
+}
+
+// 保存章节
+function saveChapters() {
+    if (!analysisData || !analysisData.translated_chapters) {
+        alert('没有可保存的翻译结果');
+        return;
+    }
+    
+    const requestData = {
+        novel_id: '{{ novel.id }}',
+        chapters: analysisData.translated_chapters
+    };
+    
+    const saveBtn = document.getElementById('save-chapters-btn');
+    saveBtn.disabled = true;
+    saveBtn.textContent = '保存中...';
+    
+    fetch('/admin/save-translated-chapters', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`成功保存 ${data.chapters_saved} 个章节！`);
+            // 跳转到管理页面
+            window.location.href = '/admin';
+        } else {
+            alert('保存失败: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('保存过程中出现错误');
+    })
+    .finally(() => {
+        saveBtn.disabled = false;
+        saveBtn.textContent = '保存章节到数据库';
+    });
+}
+
+// 添加日志条目
+function addLogEntry(message, level = 'info') {
+    const logContainer = document.getElementById('translation-log');
+    const time = new Date().toLocaleTimeString();
+    
+    const logEntry = document.createElement('div');
+    logEntry.className = `log-entry log-${level}`;
+    logEntry.innerHTML = `[${time}] ${message}`;
+    
+    // 如果是第一条日志，清空占位符
+    if (logContainer.querySelector('.text-center')) {
+        logContainer.innerHTML = '';
+    }
+    
+    logContainer.appendChild(logEntry);
+    logContainer.scrollTop = logContainer.scrollHeight;
+}
+
+// 工具函数
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = Math.floor(seconds % 60);
+    
+    if (hours > 0) {
+        return `${hours}时${minutes}分${secs}秒`;
+    } else if (minutes > 0) {
+        return `${minutes}分${secs}秒`;
+    } else {
+        return `${secs}秒`;
+    }
+}
+
+// 页面加载完成后的初始化
+document.addEventListener('DOMContentLoaded', function() {
+    // 初始化步骤指示器
+    setStep(1);
+    
+    // 添加拖拽支持
+    const uploadZone = document.getElementById('upload-zone');
+    
+    uploadZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        uploadZone.classList.add('dragover');
+    });
+    
+    uploadZone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+    });
+    
+    uploadZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            const fileInput = document.getElementById('novel-file');
+            fileInput.files = files;
+            handleFileSelect(fileInput);
+        }
+    });
+});
+
+// 页面卸载时清理轮询
+window.addEventListener('beforeunload', function() {
+    if (progressPollingInterval) {
+        clearInterval(progressPollingInterval);
+        progressPollingInterval = null;
+    }
+});
+
+// 页面隐藏时也清理轮询（防止后台继续请求）
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden && progressPollingInterval) {
+        clearInterval(progressPollingInterval);
+        progressPollingInterval = null;
+        console.log('页面隐藏，已停止进度轮询');
+    }
+});
+</script>
 {% endblock %}

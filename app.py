@@ -1285,6 +1285,376 @@ def get_prompt_templates():
             }
         })
 
+# 章节批量翻译相关路由
+@app.route('/admin/analyze-chapters', methods=['POST'], endpoint='analyze_chapters')
+@admin_required
+def analyze_chapters():
+    """分析上传的章节文件"""
+    try:
+        if 'novel_file' not in request.files:
+            return jsonify({'success': False, 'error': '没有上传文件'})
+        
+        file = request.files['novel_file']
+        if file.filename == '':
+            return jsonify({'success': False, 'error': '未选择文件'})
+        
+        if not file.filename.lower().endswith('.txt'):
+            return jsonify({'success': False, 'error': '只支持TXT格式文件'})
+        
+        # 获取参数
+        api_key = request.form.get('api_key', '').strip()
+        custom_prompt = request.form.get('custom_prompt', '').strip()
+        preview_mode = request.form.get('preview_mode') == 'true'
+        novel_id = request.form.get('novel_id')
+        
+        if not novel_id:
+            return jsonify({'success': False, 'error': '缺少小说ID'})
+        
+        # 保存临时文件
+        filename = secure_filename(file.filename)
+        temp_path = os.path.join(app.config['UPLOAD_FOLDER'], f"temp_chapters_{uuid.uuid4().hex[:8]}_{filename}")
+        
+        # 确保上传目录存在
+        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+        file.save(temp_path)
+        
+        try:
+            # 使用翻译器分析文件
+            from novel_translator_qwen import QwenNovelTranslator
+            translator = QwenNovelTranslator(api_key=api_key if api_key else None)
+            
+            success, novel_info, issues = translator.parse_novel_file(temp_path)
+            
+            if success:
+                # 如果是预览模式，只保留前3章
+                if preview_mode and len(novel_info.chapters) > 3:
+                    novel_info.chapters = novel_info.chapters[:3]
+                
+                # 生成预览数据
+                preview_data = {
+                    'title': novel_info.title,
+                    'author': novel_info.author,
+                    'description': novel_info.description,
+                    'category': novel_info.category,
+                    'chapter_count': len(novel_info.chapters),
+                    'total_words': sum(len(ch.title) + len(ch.content) for ch in novel_info.chapters),
+                    'preview_chapters': [
+                        {
+                            'title': ch.title,
+                            'content_preview': ch.content[:200] + '...' if len(ch.content) > 200 else ch.content,
+                            'word_count': len(ch.content)
+                        }
+                        for ch in novel_info.chapters[:5]
+                    ],
+                    'issues': issues
+                }
+                
+                # 生成唯一ID用于标识这次解析
+                analysis_id = uuid.uuid4().hex
+                
+                # 保存完整的解析数据到临时文件
+                analysis_data = {
+                    'novel_info': {
+                        'title': novel_info.title,
+                        'author': novel_info.author,
+                        'description': novel_info.description,
+                        'language': novel_info.language.value,
+                        'category': novel_info.category,
+                        'chapters': [
+                            {
+                                'title': ch.title,
+                                'content': ch.content,
+                                'chapter_number': ch.chapter_number
+                            }
+                            for ch in novel_info.chapters
+                        ]
+                    },
+                    'novel_id': novel_id,
+                    'api_key': api_key,
+                    'custom_prompt': custom_prompt,
+                    'preview_mode': preview_mode,
+                    'timestamp': datetime.utcnow().isoformat()
+                }
+                
+                # 保存到临时JSON文件
+                temp_json_path = os.path.join(app.config['UPLOAD_FOLDER'], f"chapter_analysis_{analysis_id}.json")
+                with open(temp_json_path, 'w', encoding='utf-8') as f:
+                    json.dump(analysis_data, f, ensure_ascii=False, indent=2)
+                
+                # 在预览数据中包含analysis_id
+                preview_data['analysis_id'] = analysis_id
+                
+                return jsonify({
+                    'success': True,
+                    'data': preview_data
+                })
+            else:
+                return jsonify({'success': False, 'error': '解析失败', 'issues': issues})
+                
+        finally:
+            # 清理原始临时文件
+            if os.path.exists(temp_path):
+                os.remove(temp_path)
+                
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/admin/translate-chapters', methods=['POST'], endpoint='translate_chapters')
+@admin_required
+def translate_chapters():
+    """开始翻译章节"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'success': False, 'error': '无效的数据'})
+        
+        analysis_id = data.get('analysis_id')
+        custom_prompt = data.get('custom_prompt', '').strip()
+        preview_mode = data.get('preview_mode', False)
+        novel_id = data.get('novel_id')
+        
+        if not analysis_id:
+            return jsonify({'success': False, 'error': '缺少分析ID'})
+        
+        if not novel_id:
+            return jsonify({'success': False, 'error': '缺少小说ID'})
+        
+        # 读取之前保存的解析数据
+        temp_json_path = os.path.join(app.config['UPLOAD_FOLDER'], f"chapter_analysis_{analysis_id}.json")
+        
+        if not os.path.exists(temp_json_path):
+            return jsonify({'success': False, 'error': '解析数据已过期，请重新解析文件'})
+        
+        try:
+            with open(temp_json_path, 'r', encoding='utf-8') as f:
+                analysis_data = json.load(f)
+            
+            # 更新自定义提示词
+            if custom_prompt:
+                analysis_data['custom_prompt'] = custom_prompt
+            
+            # 创建翻译任务ID
+            task_id = str(uuid.uuid4())
+            
+            # 启动后台翻译任务
+            import threading
+            
+            def chapter_translation_worker():
+                try:
+                    from novel_translator_qwen import QwenNovelTranslator
+                    from novel_importer import NovelInfo, ChapterInfo, Language
+                    
+                    # 重构数据为NovelInfo对象
+                    chapters = []
+                    for ch_data in analysis_data['novel_info']['chapters']:
+                        chapters.append(ChapterInfo(
+                            title=ch_data['title'],
+                            content=ch_data['content'],
+                            chapter_number=ch_data.get('chapter_number', 0)
+                        ))
+                    
+                    novel_obj = NovelInfo(
+                        title=analysis_data['novel_info']['title'],
+                        author=analysis_data['novel_info']['author'],
+                        description=analysis_data['novel_info']['description'],
+                        language=Language.CHINESE,
+                        category=analysis_data['novel_info']['category'],
+                        chapters=chapters
+                    )
+                    
+                    # 初始化翻译器
+                    translator = QwenNovelTranslator(api_key=analysis_data.get('api_key'))
+                    
+                    # 创建进度跟踪
+                    progress_cache = app.config.setdefault('CHAPTER_TRANSLATION_PROGRESS', {})
+                    progress_cache[task_id] = {
+                        'status': 'translating',
+                        'progress': {
+                            'current_chapter': 0,
+                            'total_chapters': len(novel_obj.chapters),
+                            'current_chapter_title': '',
+                            'success_count': 0,
+                            'error_count': 0,
+                            'estimated_cost': 0.0,
+                            'elapsed_time': 0.0,
+                            'progress_percent': 0.0,
+                            'success_rate': 100.0
+                        },
+                        'log_messages': [],
+                        'novel_id': novel_id
+                    }
+                    
+                    # 进度回调函数
+                    def progress_callback(progress):
+                        print(f"进度回调: status={progress.status}, current_chapter={progress.current_chapter}/{progress.total_chapters}")
+                        progress_data = progress_cache[task_id]
+                        progress_data['progress'] = {
+                            'current_chapter': progress.current_chapter,
+                            'total_chapters': progress.total_chapters,
+                            'current_chapter_title': progress.current_chapter_title,
+                            'success_count': progress.success_count,
+                            'error_count': progress.error_count,
+                            'estimated_cost': progress.estimated_cost,
+                            'elapsed_time': progress.elapsed_time,
+                            'progress_percent': progress.progress_percent,
+                            'success_rate': progress.success_rate
+                        }
+                        
+                        # 更新状态
+                        if hasattr(progress, 'status'):
+                            progress_data['status'] = progress.status
+                            print(f"更新状态为: {progress.status}")
+                        
+                        # 更新日志消息
+                        if progress.status == 'completed':
+                            progress_data['log_message'] = f"翻译完成！共 {progress.total_chapters} 章"
+                            progress_data['log_level'] = 'success'
+                            print(f"翻译完成，设置完成状态")
+                        elif progress.status == 'error':
+                            progress_data['log_message'] = f"翻译出错: {progress.current_chapter_title}"
+                            progress_data['log_level'] = 'error'
+                        else:
+                            progress_data['log_message'] = f"正在翻译: {progress.current_chapter_title}"
+                            progress_data['log_level'] = 'info'
+                    
+                    # 开始翻译
+                    success, translated_novel, message = translator.translate_novel(
+                        novel_obj,
+                        custom_prompt=analysis_data.get('custom_prompt'),
+                        progress_callback=progress_callback
+                    )
+                    
+                    if success:
+                        print(f"翻译成功，设置最终完成状态")
+                        progress_cache[task_id]['status'] = 'completed'
+                        progress_cache[task_id]['result'] = {
+                            'title': translated_novel.title,
+                            'author': translated_novel.author,
+                            'description': translated_novel.description,
+                            'chapters': [
+                                {
+                                    'title': chapter.title,
+                                    'content': chapter.content,
+                                    'chapter_number': chapter.chapter_number
+                                }
+                                for chapter in translated_novel.chapters
+                            ]
+                        }
+                        progress_cache[task_id]['stats'] = {
+                            'success_count': progress_cache[task_id]['progress']['success_count'],
+                            'error_count': progress_cache[task_id]['progress']['error_count'],
+                            'total_cost': translator.total_cost,
+                            'elapsed_time': progress_cache[task_id]['progress']['elapsed_time'],
+                            'success_rate': progress_cache[task_id]['progress']['success_rate']
+                        }
+                    else:
+                        progress_cache[task_id]['status'] = 'error'
+                        progress_cache[task_id]['error'] = message
+                        
+                except Exception as e:
+                    if task_id in progress_cache:
+                        progress_cache[task_id]['status'] = 'error'
+                        progress_cache[task_id]['error'] = str(e)
+                    else:
+                        # 如果进度缓存不存在，创建一个错误记录
+                        progress_cache = app.config.setdefault('CHAPTER_TRANSLATION_PROGRESS', {})
+                        progress_cache[task_id] = {
+                            'status': 'error',
+                            'error': str(e)
+                        }
+            
+            # 启动翻译线程
+            thread = threading.Thread(target=chapter_translation_worker)
+            thread.daemon = True
+            thread.start()
+            
+            return jsonify({'success': True, 'task_id': task_id})
+            
+        finally:
+            # 清理临时分析文件
+            if os.path.exists(temp_json_path):
+                os.remove(temp_json_path)
+        
+    except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"章节翻译过程中出错: {error_details}")
+        return jsonify({'success': False, 'error': f'翻译启动失败: {str(e)}'})
+
+@app.route('/admin/chapter-translation-progress/<task_id>', methods=['GET'], endpoint='chapter_translation_progress')
+@admin_required
+def chapter_translation_progress(task_id):
+    """获取章节翻译进度"""
+    try:
+        progress_cache = app.config.get('CHAPTER_TRANSLATION_PROGRESS', {})
+        
+        if task_id not in progress_cache:
+            return jsonify({'success': False, 'error': '翻译任务不存在'})
+        
+        progress_data = progress_cache[task_id]
+        return jsonify({'success': True, **progress_data})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/admin/save-translated-chapters', methods=['POST'], endpoint='save_translated_chapters')
+@admin_required
+def save_translated_chapters():
+    """保存翻译后的章节到数据库"""
+    try:
+        data = request.get_json()
+        if not data:
+            return jsonify({'success': False, 'error': '无效的数据'})
+        
+        novel_id = data.get('novel_id')
+        chapters = data.get('chapters', [])
+        
+        if not novel_id:
+            return jsonify({'success': False, 'error': '缺少小说ID'})
+        
+        if not chapters:
+            return jsonify({'success': False, 'error': '没有章节数据'})
+        
+        # 验证小说是否存在
+        novel = Novel.query.get(novel_id)
+        if not novel:
+            return jsonify({'success': False, 'error': '小说不存在'})
+        
+        # 批量创建章节记录
+        chapters_to_add = []
+        for chapter_data in chapters:
+            chapter = Chapter(
+                novel_id=novel_id,
+                title=chapter_data['title'],
+                content=chapter_data['content']
+            )
+            chapters_to_add.append(chapter)
+            
+            # 分批提交，避免内存问题
+            if len(chapters_to_add) >= 50:
+                db.session.add_all(chapters_to_add)
+                db.session.flush()
+                chapters_to_add = []
+        
+        # 提交剩余的章节
+        if chapters_to_add:
+            db.session.add_all(chapters_to_add)
+        
+        db.session.commit()
+        
+        return jsonify({
+            'success': True,
+            'chapters_saved': len(chapters),
+            'message': f'成功保存 {len(chapters)} 个章节到小说《{novel.title}》'
+        })
+        
+    except Exception as e:
+        db.session.rollback()
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"保存章节出错: {error_details}")
+        return jsonify({'success': False, 'error': str(e)})
+
 @app.route('/admin/preview-translation', methods=['POST'], endpoint='preview_translation')
 @admin_required
 def preview_translation():

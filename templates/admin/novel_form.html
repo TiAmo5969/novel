@@ -12,8 +12,28 @@
             {{ form.description.label }} {{ form.description(class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white") }}
         </div>
         <div class="mb-4">
-            <label class="block text-gray-700 dark:text-gray-300">上传封面</label>
-            <input type="file" name="cover" accept="image/png,image/jpeg,image/gif" class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white">
+            <label class="block text-gray-700 dark:text-gray-300 mb-2">上传封面</label>
+            <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-4 text-center">
+                <input type="file" name="cover" id="cover-input" accept="image/png,image/jpeg,image/jpg,image/gif" 
+                       class="hidden" onchange="previewImage(this)">
+                <label for="cover-input" class="cursor-pointer">
+                    <div id="upload-placeholder" class="flex flex-col items-center">
+                        <svg class="w-12 h-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                        </svg>
+                        <p class="text-gray-600 dark:text-gray-400">点击上传封面图片</p>
+                        <p class="text-sm text-gray-500 dark:text-gray-500">支持 PNG, JPG, JPEG, GIF 格式</p>
+                    </div>
+                </label>
+                <div id="image-preview" class="hidden">
+                    <img id="preview-img" src="" alt="封面预览" class="max-w-full max-h-64 mx-auto rounded">
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                        <span id="file-name"></span>
+                        <button type="button" onclick="clearPreview()" class="text-red-500 ml-2">删除</button>
+                    </p>
+                </div>
+            </div>
         </div>
         <div class="mb-4">
             {{ form.category.label }} {{ form.category(class="w-full p-2 border rounded dark:bg-gray-700 dark:text-white", placeholder="例如: 奇幻") }}
@@ -24,9 +44,42 @@
     </form>
     {% if novel and novel.cover_image %}
     <div class="mt-4">
-        <p>当前封面：</p>
-        <img src="{{ url_for('static', filename='img/' + novel.cover_image) }}" alt="{{ novel.title }} 封面" class="w-32 h-48 object-cover">
+        <p class="text-gray-700 dark:text-gray-300 mb-2">当前封面：</p>
+        <img src="{{ url_for('static', filename='img/' + novel.cover_image) }}" 
+             alt="{{ novel.title }} 封面" 
+             class="w-32 h-48 object-cover rounded shadow">
     </div>
     {% endif %}
 </div>
+
+<script>
+function previewImage(input) {
+    const file = input.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const placeholder = document.getElementById('upload-placeholder');
+            const preview = document.getElementById('image-preview');
+            const previewImg = document.getElementById('preview-img');
+            const fileName = document.getElementById('file-name');
+            
+            previewImg.src = e.target.result;
+            fileName.textContent = file.name;
+            placeholder.classList.add('hidden');
+            preview.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function clearPreview() {
+    const input = document.getElementById('cover-input');
+    const placeholder = document.getElementById('upload-placeholder');
+    const preview = document.getElementById('image-preview');
+    
+    input.value = '';
+    placeholder.classList.remove('hidden');
+    preview.classList.add('hidden');
+}
+</script>
 {% endblock %}
