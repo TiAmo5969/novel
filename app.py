@@ -350,48 +350,64 @@ def search():
                          total=total,
                          per_page=per_page)
 
-@app.route('/sitemap.xml')
-def sitemap():
+# @app.route('/sitemap.xml')
+# def sitemap():
     from flask import make_response
     
-    xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
-    xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    # xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    # xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    #
+    # # 添加主页
+    # xml += '<url><loc>https://taletap.org/</loc><lastmod>2025-01-01</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>\n'
+    #
+    # # 添加重要页面
+    # important_pages = [
+    #     ('about', 'monthly', '0.8'),
+    #     ('contact', 'monthly', '0.6'),
+    #     ('privacy-policy', 'monthly', '0.5'),
+    #     ('terms-of-service', 'monthly', '0.5'),
+    # ]
+    #
+    # for page, freq, priority in important_pages:
+    #     xml += f'<url><loc>https://taletap.org/{page}</loc><lastmod>2025-01-01</lastmod><changefreq>{freq}</changefreq><priority>{priority}</priority></url>\n'
+    #
+    # # 添加分类页面
+    # categories = ['Fantasy', 'Romance', 'Sci-Fi', 'Mystery', 'Thriller', 'Recommended']
+    # for category in categories:
+    #     xml += f'<url><loc>https://taletap.org/category/{category}</loc><lastmod>2025-01-01</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>\n'
+    #
+    # # 添加小说页面
+    # novels = Novel.query.all()
+    # for novel in novels:
+    #     xml += f'<url><loc>https://taletap.org/novel/{novel.id}</loc><lastmod>2025-01-01</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>\n'
+    #
+    #     # 添加章节页面（只添加前几章，避免sitemap过大）
+    #     chapters = Chapter.query.filter_by(novel_id=novel.id).limit(5).all()
+    #     for chapter in chapters:
+    #         xml += f'<url><loc>https://taletap.org/novel/{novel.id}/chapter/{chapter.id}</loc><lastmod>2025-01-01</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>\n'
+    #
+    # xml += '</urlset>'
     
-    # 添加主页
-    xml += '<url><loc>https://taletap.org/</loc><lastmod>2025-01-01</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>\n'
-    
-    # 添加重要页面
-    important_pages = [
-        ('about', 'monthly', '0.8'),
-        ('contact', 'monthly', '0.6'),
-        ('privacy-policy', 'monthly', '0.5'),
-        ('terms-of-service', 'monthly', '0.5'),
-    ]
-    
-    for page, freq, priority in important_pages:
-        xml += f'<url><loc>https://taletap.org/{page}</loc><lastmod>2025-01-01</lastmod><changefreq>{freq}</changefreq><priority>{priority}</priority></url>\n'
-    
-    # 添加分类页面
-    categories = ['Fantasy', 'Romance', 'Sci-Fi', 'Mystery', 'Thriller', 'Recommended']
-    for category in categories:
-        xml += f'<url><loc>https://taletap.org/category/{category}</loc><lastmod>2025-01-01</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>\n'
-    
-    # 添加小说页面
-    novels = Novel.query.all()
-    for novel in novels:
-        xml += f'<url><loc>https://taletap.org/novel/{novel.id}</loc><lastmod>2025-01-01</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>\n'
-        
-        # 添加章节页面（只添加前几章，避免sitemap过大）
-        chapters = Chapter.query.filter_by(novel_id=novel.id).limit(5).all()
-        for chapter in chapters:
-            xml += f'<url><loc>https://taletap.org/novel/{novel.id}/chapter/{chapter.id}</loc><lastmod>2025-01-01</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>\n'
-    
-    xml += '</urlset>'
-    
-    response = make_response(xml)
-    response.headers['Content-Type'] = 'application/xml'
-    return response
+    # response = make_response()
+    # response.headers['Content-Type'] = 'application/xml'
+    # return response
 
+
+@app.route('/sitemap.xml')
+def sitemap():
+    # xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
+    # xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    # xml += f'<url><loc>https://taletap.org/</loc></url>\n'
+    # for novel in Novel.query.all():
+    #     xml += f'<url><loc>https://taletap.org/novel/{novel.id}</loc></url>\n'
+    #     for chapter in novel.chapters:
+    #         xml += f'<url><loc>https://taletap.org/novel/{novel.id}/chapter/{chapter.id}</loc></url>\n'
+    # xml += '</urlset>'
+    # response = make_response(xml)
+    # response.headers['Content-Type'] = 'application/xml'
+    # return response
+    #返回根目录sitemap.xml文件
+    return send_from_directory(ROOT_DIRECTORY, 'sitemap.xml')
 
 @app.route('/robots.txt')
 def robots():
